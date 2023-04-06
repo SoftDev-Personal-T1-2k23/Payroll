@@ -17,11 +17,12 @@ class Tooltip:
         style = ttk.Style()
         style.configure("Tooltip.TFrame", background="#AAA")
         style.configure("Tooltip.TLabel", background="#AAA")
+        style.configure("TooltipBold.TLabel", background="#AAA", font=("Sans", 10, "bold"))
 
         frame = ttk.Frame(self.root, style="Tooltip.TFrame", width=20)
 
         panel_top = ttk.Frame(frame, style="Tooltip.TFrame")
-        label_title = ttk.Label(panel_top, text=title, style="Tooltip.TLabel")
+        label_title = ttk.Label(panel_top, text=title, style="TooltipBold.TLabel")
 
         panel_bottom = ttk.Frame(frame, style="Tooltip.TFrame")
         label_desc = ttk.Label(panel_bottom, text=desc, style="Tooltip.TLabel")
