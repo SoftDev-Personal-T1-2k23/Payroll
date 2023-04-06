@@ -6,6 +6,12 @@ from UI.TooltipController import TooltipController
 BUTTON_WIDTH = 20
 
 def constructor(ui_core, ttc:TooltipController, cache, page_data):
+
+    def attempt_logout():
+        logout_success = True
+        if logout_success:
+            ui_core.page_controller.open_page("login")
+
     base_frame = ttk.Frame(ui_core.root, padding=15)
 
     top_frame = ttk.Frame(base_frame)
@@ -24,7 +30,7 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
     ttc.add_tooltip(import_export_btn, "home_impexp_button", (-170, 0), "Export Page", "Export employee information")
 
     bottom_frame = ttk.Frame(base_frame, height=50)
-    back_btn = ttk.Button(bottom_frame, text="Back", command=ui_core.page_controller.open_prev_page)
+    logout_btn = ttk.Button(bottom_frame, text="Logout", command=attempt_logout)
 
 
 
@@ -42,6 +48,6 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
     import_export_btn.pack(expand=TRUE)
     #
     bottom_frame.pack(side=LEFT)
-    back_btn.pack(side=LEFT)
+    logout_btn.pack(side=LEFT)
     
     # root.bind("<Return>", calculate)

@@ -55,7 +55,7 @@ class PageController:
         self.store_current_page()
         self.page = page
         self.page_data = {}
-
+        
         self.page.load(self.ui_core, self.ui_core.tooltip_controller, self.cache, self.page_data)
     
     def clear_page(self) ->None:
