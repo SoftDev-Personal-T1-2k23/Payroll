@@ -6,10 +6,8 @@ from UI.TooltipController import TooltipController
 BUTTON_WIDTH = 20
 
 def constructor(ui_core, ttc:TooltipController, cache, page_data):
-    ttk.Style().configure("Indent.TFrame", background="#AAA")
-        # ttk.Style().configure("Red.TFrame", background="#F00")
-    # ttk.Style().configure("Green.TFrame", background="#0F0")
-    # ttk.Style().configure("Blue.TFrame", background="#00F")
+    ttk.Style().configure("Indent.TFrame", background="#CCC")
+
     search_entry_var = StringVar()
     filter0_var = StringVar()
     filter1_var = StringVar()
