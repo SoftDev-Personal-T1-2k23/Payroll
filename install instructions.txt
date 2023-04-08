@@ -1,0 +1,7 @@
+install instructions
+pip install Payroll-1.0-py3-none-any.whl
+python .\Program.py
+
+
+build out to executable:
+pyinstaller --additional-hooks-dir=setup.py Program.py

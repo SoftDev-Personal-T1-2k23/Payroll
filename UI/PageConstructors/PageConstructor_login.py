@@ -12,7 +12,9 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
         login_success = ui_core.ui_data_interface.attempt_login(username_var.get(), password_var.get())
         if login_success:
             ui_core.page_controller.open_page("home")
-    
+        else:
+            message_label.configure(text="Invalid login. Please try again.")
+
     base_frame = ttk.Frame(ui_core.root, padding=15)
 
     top_frame = ttk.Frame(base_frame)
@@ -33,7 +35,7 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
     
     login_btn = ttk.Button(entry_frame, text="Login", command=attempt_login)
 
-
+    message_label = ttk.Label(entry_frame, text = "", foreground="red", font=("Arial", 12))
 
     base_frame.pack(side=TOP, fill=BOTH, expand=TRUE)
 
@@ -46,5 +48,6 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
     user_entry.pack(expand=TRUE, pady=(0,5))
     pass_entry.pack(expand=TRUE, pady=(0,5))
     login_btn.pack(expand=TRUE)
+    message_label.pack(expand=TRUE)
 
     #user_entry.focus()

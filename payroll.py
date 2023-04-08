@@ -9,7 +9,10 @@ salaried, commissioned, or hourly and be output to a text file.
 
 from abc import ABC, abstractmethod
 import os
+import csv
+import hashlib
 import pandas as pd
+
 
 EMPLOYEES = None
 PAY_LOGFILE = 'paylog.txt'
@@ -35,6 +38,7 @@ class Employee:
         self.hourly = data[10]
         self.route = data[11]
         self.account = data[12]
+        self.password = data[13]
         self.quick_attribute = {
         #use as a reference for which attribute corrosponds to which number
             'ID': self.id,
@@ -237,8 +241,57 @@ class Hourly(Classification):
         return "3"
 
 
+
+def hash_password(password):
+    # Encode the password string as UTF-8 bytes
+    password_bytes = password.encode('utf-8')
+
+    # Generate the SHA-256 hash of the password bytes
+    sha256_hash = hashlib.sha256(password_bytes)
+
+    # Convert the hash to a hexadecimal string
+    hash_str = sha256_hash.hexdigest()
+
+    return hash_str
+
+def initialize_passwords():
+    '''
+    this function is for creating the hashed passwords based on the user id if the password has not yet been initialized
+    '''
+    #first figure out how many employees there are
+    with open('employees.csv', mode='r') as file:
+        # Create a reader object
+        reader = csv.reader(file)
+        # Use a generator expression to count the number of non-empty rows
+        num_rows = sum(1 for row in reader if any(row))
+    num_rows -= 1 #subtract 1 for the header row
+
+    # Read the CSV file into a DataFrame
+    df = pd.read_csv('employees.csv')
+   
+    
+    for i in range(num_rows):
+      
+        if pd.isnull(df.iloc[i, 13]):
+            #get the id
+            user_id = df.iloc[i, 0]
+            password = hash_password(str(user_id))
+          
+            # Edit the cell at row 4, column 13
+            df.iloc[i, 13] = password
+
+    # Write the updated DataFrame back to the CSV file
+    df.to_csv('employees.csv', index=False)
+
+
+
+
 def load_employees(data = 'employees.csv'):
     #reads all employees in from the indicated csv file. Defaults employees.csv
+
+    #before loading the employees make sure they have passwords
+    initialize_passwords()
+
     raw = []
     global EMPLOYEES
     with open(os.path.dirname(__file__) + "\\" + data, 'r') as file:
@@ -250,6 +303,9 @@ def load_employees(data = 'employees.csv'):
             except:
                 pass
         EMPLOYEES = Database(raw)
+
+
+
 
 
 def process_timecards():

@@ -5,6 +5,7 @@ from UI.UIDataInterface import UIDataInterface
 from UI.ThemeController import ThemeController
 from UI.TooltipController import TooltipController
 from os import path
+import payroll
 
 class UICore:
     def __init__(self, start_page="login"):
@@ -12,6 +13,10 @@ class UICore:
         root.title("CS2450 Project")
         root.geometry("500x500")
         root.eval("tk::PlaceWindow . center")
+
+        #Maybe this should be in program.py?
+        payroll.load_employees()
+        
 
         self.dir_root = path.abspath(path.join(__file__, "..\\.."))
         self.root = root
