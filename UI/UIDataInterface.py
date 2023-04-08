@@ -13,7 +13,7 @@ class UIDataInterface:
         # Return the login status
         return is_logged_in
     
-    def get_access_level() -> int:
+    def get_access_level(self) -> int:
         """Return the current user's access level
         
         Returns:
@@ -24,7 +24,7 @@ class UIDataInterface:
         # Return access level
         return access_level
 
-    def attempt_login(username:str, password:str) -> bool:
+    def attempt_login(self, username:str, password:str) -> bool:
         """Attempt to login with a provided username/id and password
          
           Params:
@@ -38,7 +38,7 @@ class UIDataInterface:
         # Return the login attempt's result
         return login_result
     
-    def find_employees(search_filters:dict) -> dict:
+    def find_employees(self, search_filters:dict) -> dict:
         """Find and return a collection of employees from the database
          
           Params:
@@ -49,7 +49,7 @@ class UIDataInterface:
         # Request a collection of employees that match specified search filters (via backend)
         # Return the resulting collection
         
-    def add_employee(emp_id:str, emp_info:dict) -> bool:
+    def add_employee(self, emp_id:str, emp_info:dict) -> bool:
         """Add an employee with the specified information to the database
         
         Params:
@@ -61,7 +61,7 @@ class UIDataInterface:
         # Pass the employee id and employee info to the databae (via backend)
         # Return whether the addition was successful
 
-    def update_employee(emp_id:str, emp_info:dict) -> bool:
+    def update_employee(self, emp_id:str, emp_info:dict) -> bool:
         """Update an existing employee's information
         
         Params:
@@ -73,7 +73,7 @@ class UIDataInterface:
         # Request a change to an employee via employee id and the changes desired (via backend)
         # Return whether the update was successful
 
-    def archive_employee(emp_id:str) -> bool:
+    def archive_employee(self, emp_id:str) -> bool:
         """Set an existing employee as archived
          
           Params:
@@ -84,7 +84,7 @@ class UIDataInterface:
         # Request that an employee via employee id be archived (via backend)
         # Return whether the archival was successful
 
-    def generate_pay_report(emp_id:str) -> bool:
+    def generate_pay_report(self, emp_id:str) -> bool:
         """Generate a pay report for a particular employee
          
           Params:
@@ -95,7 +95,7 @@ class UIDataInterface:
         # Request for a pay report to be generated and exported (via backend)
         # Return whether the process was successful
 
-    def csv_export(emp_id_list:list) -> bool:
+    def csv_export(self, emp_id_list:list) -> bool:
         """Generate and export a csv file containing employees' information
         
         Params:
