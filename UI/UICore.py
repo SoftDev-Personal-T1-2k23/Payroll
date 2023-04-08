@@ -7,21 +7,39 @@ from UI.TooltipController import TooltipController
 from os import path
 
 class UICore:
+    """Serves as a nexus for various UI classes and their communication"""
+
     def __init__(self, start_page="login"):
+        """Initialize the UI portion of the program
+         
+          Params:
+              start_page: The page the program will launch on startup
+        """
+
+        # Setup tkinter root and main window
+        # Set the window title & Set the window dimensions & Center the window
         root = Tk()
         root.title("CS2450 Project")
         root.geometry("500x500")
         root.eval("tk::PlaceWindow . center")
 
+        # Determine and store the program's absolute CWD path
         self.dir_root = path.abspath(path.join(__file__, "..\\.."))
+
+        # Store root
         self.root = root
+
+        # Store and create: UIDataInterface, ThemeController, TooltipController, PageController
         self.ui_data_interface = UIDataInterface()
         #self.theme_controller = ThemeController(self.root)
         self.tooltip_controller = TooltipController(self)
         self.page_controller = PageController(self)
 
+        # Setup temporary widget styling
         self.temp_setup_styling()
 
+        # Open the welcome page (via PageController)
+        # Run the tkinter UI loop
         self.page_controller.open_page(start_page)
         root.mainloop()
 

@@ -1,4 +1,4 @@
-"""A page for viewing an employee's information"""
+"""A page for editing an employee's information"""
 
 from tkinter import *
 from tkinter import ttk
@@ -8,6 +8,7 @@ from UI.TooltipController import TooltipController
 BUTTON_WIDTH = 20
 
 def constructor(ui_core, ttc:TooltipController, cache, page_data):
+
     # Split the page into necessary panels
     base_frame = ttk.Frame(ui_core.root, padding=15)
 
@@ -35,6 +36,8 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
     # Populate the three panels with the relevant stored information (text labels)
     #TODO: Add information
 
+    # Validate shown fields, if changed
+    #TODO: Validate fields
 
     base_frame.pack(side=TOP, fill=BOTH, expand=TRUE)
 

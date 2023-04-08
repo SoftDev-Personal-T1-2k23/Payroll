@@ -1,3 +1,5 @@
+"""The main page for navigation to other areas within the application"""
+
 from tkinter import *
 from tkinter import ttk
 #
@@ -12,13 +14,17 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
         if logout_success:
             ui_core.page_controller.open_page("login")
 
+    # Split the page into necessary panels
     base_frame = ttk.Frame(ui_core.root, padding=15)
-
     top_frame = ttk.Frame(base_frame)
 
+    # Add the page title
     login_frame = ttk.Frame(top_frame)
     title = ttk.Label(login_frame, text="Home", style="Bold.TLabel")
 
+    # Add necessary navigation buttons to other pages
+    #       (search, employee<self>, edit_employee<self>, add_employee, import/export)
+    # Add necessary tooltips
     button_frame = ttk.Frame(login_frame)
     search_btn = ttk.Button(button_frame, text="Search", width=BUTTON_WIDTH, command=lambda: ui_core.page_controller.open_page("search"))
     ttc.add_tooltip(search_btn, "home_search_button", (-170, 0), "Search Page", "Search the employee database")
@@ -29,6 +35,7 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
     import_export_btn = ttk.Button(button_frame, text="Export", width=BUTTON_WIDTH, command=lambda: ui_core.page_controller.open_page("export"))
     ttc.add_tooltip(import_export_btn, "home_impexp_button", (-170, 0), "Export Page", "Export employee information")
 
+    # Add a logout button -> login page
     bottom_frame = ttk.Frame(base_frame, height=50)
     logout_btn = ttk.Button(bottom_frame, text="Logout", command=attempt_logout)
 

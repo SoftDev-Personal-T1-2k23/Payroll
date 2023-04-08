@@ -19,16 +19,27 @@ def generate_hex3_spectrum(hex3_0:str, hex3_1:str):
 
     return spectrum
 
-    
 
 class Theme:
+    """A container for various theme colors"""
+
     def __init__(self, id:str, bg_color:str, fg_color:str, text_color:str):
+        """Store the provided colors for later
+        
+          Params:
+              id: Them theme id to use
+              bg_color: The background color
+              fg_color: The foreground color
+              text_color: The text color
+        """
+        # Store the provided colors for later use
         self.id = id
         self.bg_color = bg_color
         self.fg_color = fg_color
         self.text_color = text_color
         self.color_spectrum = None
 
+        # A gradient between bg_color and fg_color will be applied
         color_spectrum = generate_hex3_spectrum(bg_color, fg_color)
-        print(color_spectrum)
+
         self.color_spectrum = color_spectrum

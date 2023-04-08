@@ -1,3 +1,5 @@
+"""A page for searching the employee database"""
+
 from tkinter import *
 from tkinter import ttk
 #
@@ -6,21 +8,25 @@ from UI.TooltipController import TooltipController
 BUTTON_WIDTH = 20
 
 def constructor(ui_core, ttc:TooltipController, cache, page_data):
-    ttk.Style().configure("Indent.TFrame", background="#CCC")
-
     search_entry_var = StringVar()
     filter0_var = StringVar()
     filter1_var = StringVar()
+    # Split the page into necessary panels
 
     base_frame = ttk.Frame(ui_core.root, padding=15)
 
+    # Add the page title
     top_frame = ttk.Frame(base_frame)
     title = ttk.Label(top_frame, text="Employee Search", style="Bold.TLabel")
 
+    # Add a search entry and search button
     search_frame = ttk.Frame(top_frame, height=30)
     search_btn = ttk.Button(search_frame, text="Search")
     search_entry = ttk.Entry(search_frame, width=50, textvariable=search_entry_var)
 
+    # Add search filter options
+    #       (employee last name, employee id, employee department id, etc.)
+    # Add necessary tooltips
     filter_frame = ttk.Frame(top_frame, height=30)
 
     FILTER0_OPTIONS = ["These", "are", "all", "valid", "options"]
@@ -36,6 +42,7 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
     middle_frame = ttk.Frame(base_frame)
     results_frame = ttk.Frame(middle_frame, width=400, height=300, style="Indent.TFrame")
 
+    # Add a "to home" button (-> home page) & other "ease of use" buttons
     bottom_frame = ttk.Frame(base_frame, height=50)
     back_btn = ttk.Button(bottom_frame, text="Back", command=ui_core.page_controller.open_prev_page)
 
