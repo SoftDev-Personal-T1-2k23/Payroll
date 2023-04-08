@@ -28,3 +28,14 @@ class UICore:
     def temp_setup_styling(self):
         style = ttk.Style()
         style.configure("Bold.TLabel", font=("Sans", 10, "bold"))
+        style.configure("Error.TLabel", background="#E77", foreground="#000")
+
+        ttk.Style().configure("Indent.TFrame", background="#CCC")
+        ttk.Style().configure("Indent.TLabel", background="#CCC")
+        ttk.Style().configure("Public.TFrame", background="#ACA")
+        ttk.Style().configure("Private.TFrame", background="#FEC")
+        ttk.Style().configure("Admin.TFrame", background="#FAA")
+        ttk.Style().configure("Red.TFrame", background="#F00")
+        ttk.Style().configure("Green.TFrame", background="#0F0")
+        ttk.Style().configure("Blue.TFrame", background="#00F")
+            
