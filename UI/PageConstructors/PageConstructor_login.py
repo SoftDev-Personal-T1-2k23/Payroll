@@ -31,6 +31,10 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
 
     
     # Split the page into necessary panels
+
+
+
+
     base_frame = ttk.Frame(ui_core.root, padding=15)
 
     top_frame = ttk.Frame(base_frame)
@@ -56,6 +60,7 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
     # Add the login button & Associated login logic (UIDataInterface)
     login_btn = ttk.Button(entry_frame, text="Login", command=attempt_login)
 
+
     
     bottom_frame = ttk.Frame(entry_frame, height=20)
     login_failed_text = ttk.Label(bottom_frame, text="Invalid Login", style="Error.TLabel")
@@ -76,6 +81,7 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
     user_entry.pack(expand=TRUE, pady=(0,5))
     pass_entry.pack(expand=TRUE, pady=(0,5))
     login_btn.pack(expand=TRUE)
+
 
     bottom_frame.pack(expand=TRUE)
 

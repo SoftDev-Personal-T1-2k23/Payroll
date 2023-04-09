@@ -1,3 +1,6 @@
+import payroll
+import hashlib
+
 
 class UIDataInterface:
     """An interface for communication with non-UI parts of the program"""
@@ -24,7 +27,9 @@ class UIDataInterface:
         # Return access level
         return access_level
 
-    def attempt_login(self, username:str, password:str) -> bool:
+
+    def attempt_login(self, user:str, password:str):
+        employees = payroll.EMPLOYEES.employees
         """Attempt to login with a provided username/id and password
          
           Params:
@@ -33,10 +38,27 @@ class UIDataInterface:
           Returns:
               is_logged_in: Whether the current user is logged in or not
         """
+
+        '''
+        passwords are stored as hashed values. There is no decoding function. 
+        Instead of decoding the stored password we hash the given password and check to see if it matches what was stored
+
+        '''
         # Attempt login with a username/id and password (via backend)
-        login_result = True
-        # Return the login attempt's result
-        return login_result
+        password = payroll.hash_password(password)
+
+        #first check if the employees name exists in the database
+        if payroll.find_employee(employees, user):
+            #get the users id
+            user_id = payroll.get_id(employees, user)
+            #user the id to get the employees password and check it against the users input
+            if password == employees[user_id].password: 
+                payroll.USER = employees[user_id] 
+                #if all the information matches return True  
+                return True
+        #return false if the information wasn't validated
+        return False
+
     
     def find_employees(self, search_filters:dict) -> dict:
         """Find and return a collection of employees from the database
@@ -105,3 +127,5 @@ class UIDataInterface:
         """
         # Request for a csv file containing a collection of employee information be generated and exported (via backend) 
         # Return whether the process was successful
+
+

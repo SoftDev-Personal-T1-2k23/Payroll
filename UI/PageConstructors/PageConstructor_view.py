@@ -4,11 +4,23 @@ from tkinter import *
 from tkinter import ttk
 #
 from UI.TooltipController import TooltipController
-
+import payroll
 BUTTON_WIDTH = 20
 
 def constructor(ui_core, ttc:TooltipController, cache, page_data):
+
     # Split the page into necessary panels
+    ttk.Style().configure("Indent.TFrame", background="#CCC")
+    ttk.Style().configure("Indent.TLabel", background="#CCC")
+    ttk.Style().configure("Public.TFrame", background="#ACA")
+    ttk.Style().configure("Private.TFrame", background="#FEC")
+    ttk.Style().configure("Admin.TFrame", background="#FAA")
+
+    ttk.Style().configure("Red.TFrame", background="#F00")
+    ttk.Style().configure("Green.TFrame", background="#0F0")
+    ttk.Style().configure("Blue.TFrame", background="#00F")
+
+    
     base_frame = ttk.Frame(ui_core.root, padding=15)
 
     # Add the page title
@@ -16,7 +28,9 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
     title = ttk.Label(top_frame, text="Employee View", style="Bold.TLabel")
 
     header_frame = ttk.Frame(top_frame, height=30)
-    emp_title = ttk.Label(header_frame, text="John Johny", style="Indent.TLabel")
+    #get the user object saved in the payroll file
+    user = payroll.USER
+    emp_title = ttk.Label(header_frame, text= user.first_name + " " + user.last_name , style="Indent.TLabel")
     pay_report_btn = ttk.Button(header_frame, text="Generate Pay Report")
     csv_btn = ttk.Button(header_frame, text="Export CSV")
 

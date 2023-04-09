@@ -1,10 +1,12 @@
 """A page for editing an employee's information"""
 
+
+import tkinter as tk
 from tkinter import *
 from tkinter import ttk
 #
 from UI.TooltipController import TooltipController
-
+import payroll
 BUTTON_WIDTH = 20
 
 def constructor(ui_core, ttc:TooltipController, cache, page_data):
@@ -17,7 +19,8 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
     title = ttk.Label(top_frame, text="Employee View", style="Bold.TLabel")
 
     header_frame = ttk.Frame(top_frame, height=30)
-    emp_title = ttk.Label(header_frame, text="John Johny", style="Indent.TLabel")
+    user = payroll.USER
+    emp_title = ttk.Label(header_frame, text=user.first_name + " " + user.last_name, style="Indent.TLabel")
     pay_report_btn = ttk.Button(header_frame, text="Generate Pay Report")
     csv_btn = ttk.Button(header_frame, text="Export CSV")
 
@@ -31,14 +34,58 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
 
     # Add a "to prev page" button (-> home page | search page) & other "ease of use" buttons
     bottom_frame = ttk.Frame(base_frame, height=50)
-    back_btn = ttk.Button(bottom_frame, text="Back", command=ui_core.page_controller.open_prev_page)
+    back_btn = ttk.Button(bottom_frame, text="Back", command=lambda: ui_core.page_controller.open_page("home"))
 
     # Populate the three panels with the relevant stored information (text labels)
-    #TODO: Add information
+    
+    # get the user fields and create entries and store them in a list
+    entry_list = []
+    user = payroll.USER
+    target_row = 0
+    #get the general information
+    for field_name in user.general:
+        field = user.general[field_name]
+        temp_label = ttk.Label(public_frame, text=field_name)
+        temp_label.grid(column=0, row=target_row, padx=5, pady=5)
+        temp_entry = ttk.Entry(public_frame)
+        temp_entry.insert(0, field)
+        temp_entry.grid(column=1, row=target_row, padx=5, pady=5)
+        entry_list.append(temp_entry)
+        target_row += 1
+    #get the personal information
+    for field_name in user.personal:
+        field = user.personal[field_name]
+        temp_label = ttk.Label(private_frame, text=field_name)
+        temp_label.grid(column=0, row=target_row, padx=5, pady=5)
+        temp_entry = ttk.Entry(private_frame)
+        temp_entry.insert(0, field)
+        temp_entry.grid(column=1, row=target_row, padx=5, pady=5)
+        entry_list.append(temp_entry)
+        target_row += 1
+    # get the sensitive information
+    for field_name in user.sensitive:
+        field = user.sensitive[field_name]
+        temp_label = ttk.Label(admin_frame, text=field_name)
+        temp_label.grid(column=0, row=target_row, padx=5, pady=5)
+        temp_entry = ttk.Entry(admin_frame)
+        temp_entry.insert(0, field)
+        temp_entry.grid(column=1, row=target_row, padx=5, pady=5)
+        entry_list.append(temp_entry)
+        target_row += 1
+
+    #Create change password button
+    change_btn = ttk.Button(admin_frame, text="change password", width=BUTTON_WIDTH, command=lambda: ui_core.page_controller.open_page("change"))
+
+    change_btn.grid(column=1, row=target_row, padx=5, pady=5)
+    # Create Save button
+    save_btn = ttk.Button(middle_frame, text="Save", command=lambda: payroll.save_info(entry_list))
+    # save_button.grid(column=1, row=2, padx=5, pady=5)
 
     # Validate shown fields, if changed
     #TODO: Validate fields
 
+
+    #position everything
     base_frame.pack(side=TOP, fill=BOTH, expand=TRUE)
 
     top_frame.pack(side=TOP)
@@ -57,3 +104,7 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
 
     bottom_frame.pack(side=LEFT)
     back_btn.pack(side=LEFT)
+    save_btn.pack(side=LEFT)
+
+
+
