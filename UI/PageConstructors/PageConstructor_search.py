@@ -29,15 +29,33 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
     # Add necessary tooltips
     filter_frame = ttk.Frame(top_frame, height=30)
 
+
+   
+
+
     FILTER0_OPTIONS = ["These", "are", "all", "valid", "options"]
+
+    #calculate what the longest item in the menu is so the width can be consistent
+    longest_option = max(FILTER0_OPTIONS, key=len)
+    longest_option_width = len(longest_option)
+
     filter0_frame = ttk.Frame(filter_frame, width=20)
     filter0_label = ttk.Label(filter0_frame, text="Filter0:")
     filter0_menu = ttk.OptionMenu(filter0_frame, filter0_var, FILTER0_OPTIONS[0], *FILTER0_OPTIONS)
+    #set fixed width to options menu
+    filter0_menu.config(width=longest_option_width)
+
 
     FILTER1_OPTIONS = ["Some", "helpful", "search", "filters"]
+
+    #calculate what the longest item in the menu is so the width can be consistent
+    longest_option = max(FILTER1_OPTIONS, key=len)
+    longest_option_width = len(longest_option)
+
     filter1_frame = ttk.Frame(filter_frame, width=20)
     filter1_label = ttk.Label(filter1_frame, text="Filter1:")
     filter1_menu = ttk.OptionMenu(filter1_frame, filter1_var, FILTER1_OPTIONS[0], *FILTER1_OPTIONS)
+    filter1_menu.config(width=longest_option_width)
 
     middle_frame = ttk.Frame(base_frame)
     results_frame = ttk.Frame(middle_frame, width=400, height=300, style="Indent.TFrame")

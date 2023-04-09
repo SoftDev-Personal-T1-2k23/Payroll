@@ -60,14 +60,15 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
             frame = private_frame
         else:
             frame = admin_frame
-
+        #create the descriptive labels
         temp_label = ttk.Label(frame, text=field_name)
+        #position the label using the grid
         temp_label.grid(column=0, row=target_row, padx=5, pady=5)
-        
+        #make the labels that hold the information
         value_label = ttk.Label(frame, text=field_value)
-        # value_label.configure(text=field_value)
+        #position the label using the grid
         value_label.grid(column=1, row=target_row, padx=5, pady=5)
-        
+
         target_row += 1
 
     base_frame.pack(side=TOP, fill=BOTH, expand=TRUE)
