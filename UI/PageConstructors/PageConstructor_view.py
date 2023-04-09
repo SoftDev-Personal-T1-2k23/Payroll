@@ -2,7 +2,7 @@ from tkinter import *
 from tkinter import ttk
 #
 from UI.TooltipController import TooltipController
-
+import payroll
 BUTTON_WIDTH = 20
 
 def constructor(ui_core, ttc:TooltipController, cache, page_data):
@@ -16,13 +16,15 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
     ttk.Style().configure("Green.TFrame", background="#0F0")
     ttk.Style().configure("Blue.TFrame", background="#00F")
 
+    user = payroll.USER
+
     base_frame = ttk.Frame(ui_core.root, padding=15)
 
     top_frame = ttk.Frame(base_frame)
     title = ttk.Label(top_frame, text="Employee View", style="Bold.TLabel")
 
     header_frame = ttk.Frame(top_frame, height=30)
-    emp_title = ttk.Label(header_frame, text="John Johny", style="Indent.TLabel")
+    emp_title = ttk.Label(header_frame, text= user.first_name + " " + user.last_name , style="Indent.TLabel")
     pay_report_btn = ttk.Button(header_frame, text="Generate Pay Report")
     csv_btn = ttk.Button(header_frame, text="Export CSV")
 

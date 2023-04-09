@@ -18,6 +18,8 @@ EMPLOYEES = None
 PAY_LOGFILE = 'paylog.txt'
 DATABASE = 'employees.csv'
 
+USER = None
+
 
 class Employee:
     #Employee object contain their name, id, payment info, classification info, and adress
@@ -56,6 +58,18 @@ class Employee:
             'Route': self.route,
             'Account': self.account
         }
+        self.editable = {
+        #use as way to easily generate editing fields for the attributes
+            'First name': self.first_name,
+            'Last name': self.last_name,       
+            'Address': self.address,
+            'City': self.city,
+            'State': self.state,
+            'Zip': self.zip,
+            'Route': self.route,
+            'Account': self.account
+        }
+        
         self.set_classification(self, data[7])
 
     @staticmethod
@@ -283,8 +297,38 @@ def initialize_passwords():
     # Write the updated DataFrame back to the CSV file
     df.to_csv('employees.csv', index=False)
 
+ #helper function for checking if an employee exists via the username
+def find_employee(employees, user):
+    for key in employees:
+        if user == employees[key].first_name:
+            return key
+    return False
 
 
+#helper function for getting the id of a user via the username
+def get_id(employees, user):
+    for key in employees:
+        if user == employees[key].first_name:
+            return key
+    return None
+
+def get_row(employees, user):
+    #created to help when saving the password and other data to the csv
+    target_row = 1
+    for key in employees:
+        if user == employees[key].first_name:
+            return target_row
+        target_row += 1
+    return None
+
+def set_data(row, col, data):
+    df = pd.read_csv('employees.csv')
+    print("changing file")
+
+    df.iloc[row, col] = data
+    df.to_csv('employees.csv', index=False)
+
+    
 
 def load_employees(data = 'employees.csv'):
     #reads all employees in from the indicated csv file. Defaults employees.csv
