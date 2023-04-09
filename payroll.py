@@ -58,23 +58,20 @@ class Employee:
             'Route': self.route,
             'Account': self.account
         }
-        self.general = {
-        #use as way to easily generate editing fields for the attributes
+        self.editable_by_user = {
+        #use as a reference for which attribute corrosponds to which number
             'First name': self.first_name,
-            'Last name': self.last_name,       
-        }
-        self.personal = {
-        #use as way to easily generate editing fields for the attributes      
+            'Last name': self.last_name,
             'Address': self.address,
             'City': self.city,
             'State': self.state,
             'Zip': self.zip,
-        }
-        self.sensitive = {
-        #use as way to easily generate editing fields for the attributes
             'Route': self.route,
             'Account': self.account
         }
+        self.general = ["ID", "First name", "Last name", "first_name", "last_name"]
+        self.personal = ["Address", "City", "State", "Zip", "Classification", "PayMethod", "Salary", "Hourly", "Commission"]
+        self.sensitive = ["Route", "Account"]
         
         self.set_classification(self, data[7])
 

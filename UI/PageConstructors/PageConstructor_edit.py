@@ -42,36 +42,27 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
     entry_list = []
     user = payroll.USER
     target_row = 0
-    #get the general information
-    for field_name in user.general:
-        field = user.general[field_name]
-        temp_label = ttk.Label(public_frame, text=field_name)
+    for field_name in user.editable_by_user:
+        field_value = user.editable_by_user[field_name]
+        frame = None
+        #decide which frame the information belongs in based on the categorized lists
+        if field_name in user.general:
+            frame = public_frame
+        elif field_name in user.personal:
+            frame = private_frame
+        else:
+            frame = admin_frame
+
+        temp_label = ttk.Label(frame, text=field_name)
         temp_label.grid(column=0, row=target_row, padx=5, pady=5)
-        temp_entry = ttk.Entry(public_frame)
-        temp_entry.insert(0, field)
+        
+        temp_entry = ttk.Entry(frame)
+        temp_entry.insert(0, field_value)
         temp_entry.grid(column=1, row=target_row, padx=5, pady=5)
+        # entry_list.append(temp_label)
         entry_list.append(temp_entry)
         target_row += 1
-    #get the personal information
-    for field_name in user.personal:
-        field = user.personal[field_name]
-        temp_label = ttk.Label(private_frame, text=field_name)
-        temp_label.grid(column=0, row=target_row, padx=5, pady=5)
-        temp_entry = ttk.Entry(private_frame)
-        temp_entry.insert(0, field)
-        temp_entry.grid(column=1, row=target_row, padx=5, pady=5)
-        entry_list.append(temp_entry)
-        target_row += 1
-    # get the sensitive information
-    for field_name in user.sensitive:
-        field = user.sensitive[field_name]
-        temp_label = ttk.Label(admin_frame, text=field_name)
-        temp_label.grid(column=0, row=target_row, padx=5, pady=5)
-        temp_entry = ttk.Entry(admin_frame)
-        temp_entry.insert(0, field)
-        temp_entry.grid(column=1, row=target_row, padx=5, pady=5)
-        entry_list.append(temp_entry)
-        target_row += 1
+
 
     #Create change password button
     change_btn = ttk.Button(admin_frame, text="change password", width=BUTTON_WIDTH, command=lambda: ui_core.page_controller.open_page("change"))

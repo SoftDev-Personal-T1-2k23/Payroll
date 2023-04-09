@@ -49,6 +49,26 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
     # Populate the three panels with the relevant stored information (text labels)
     #TODO: Add information
 
+    target_row = 0
+    for field_name in user.quick_attribute:
+        field_value = user.quick_attribute[field_name]
+        frame = None
+        #decide which frame the information belongs in based on the categorized lists
+        if field_name in user.general:
+            frame = public_frame
+        elif field_name in user.personal:
+            frame = private_frame
+        else:
+            frame = admin_frame
+
+        temp_label = ttk.Label(frame, text=field_name)
+        temp_label.grid(column=0, row=target_row, padx=5, pady=5)
+        
+        value_label = ttk.Label(frame, text=field_value)
+        # value_label.configure(text=field_value)
+        value_label.grid(column=1, row=target_row, padx=5, pady=5)
+        
+        target_row += 1
 
     base_frame.pack(side=TOP, fill=BOTH, expand=TRUE)
 
