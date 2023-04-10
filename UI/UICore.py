@@ -5,7 +5,6 @@ from UI.UIDataInterface import UIDataInterface
 from UI.ThemeController import ThemeController
 from UI.TooltipController import TooltipController
 from os import path
-import payroll
 
 class UICore:
     """Serves as a nexus for various UI classes and their communication"""
@@ -23,10 +22,6 @@ class UICore:
         root.title("CS2450 Project")
         root.geometry("500x500")
         root.eval("tk::PlaceWindow . center")
-
-        #Maybe this should be in program.py?
-        payroll.load_employees()
-
 
         # Determine and store the program's absolute CWD path
 

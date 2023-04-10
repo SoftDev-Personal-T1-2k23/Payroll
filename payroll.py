@@ -12,8 +12,11 @@ import os
 import csv
 import hashlib
 import pandas as pd
+import sys
 
 
+#DIR_ROOT = os.path.abspath(os.path.join(__file__, "..\\.."))
+DIR_ROOT = os.path.abspath(sys.executable)
 EMPLOYEES = None
 PAY_LOGFILE = 'paylog.txt'
 DATABASE = 'employees.csv'
@@ -365,7 +368,7 @@ def load_employees(data = 'employees.csv'):
 
     raw = []
     global EMPLOYEES
-    with open(os.path.dirname(__file__) + "\\" + data, 'r') as file:
+    with open(os.path.dirname(sys.executable) + "\\" + data, 'r') as file:
         for line in file:
             try:
                 temp = line.strip().split(',')
@@ -424,4 +427,7 @@ def main():
     run_payroll()
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except:
+        input("[Data] Error: Enter to exit...")

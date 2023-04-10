@@ -4,4 +4,4 @@ python .\Program.py
 
 
 build out to executable:
-pyinstaller --additional-hooks-dir=setup.py Program.py
+pyinstaller Program.py --additional-hooks-dir=setup.py --onefile
