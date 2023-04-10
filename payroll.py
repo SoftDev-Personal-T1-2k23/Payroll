@@ -16,7 +16,7 @@ import sys
 
 
 #DIR_ROOT = os.path.abspath(os.path.join(__file__, "..\\.."))
-DIR_ROOT = os.path.abspath(sys.executable)
+DIR_ROOT = os.path.abspath(os.path.join(__file__, "..\\.."))
 EMPLOYEES = None
 PAY_LOGFILE = 'paylog.txt'
 DATABASE = 'employees.csv'
