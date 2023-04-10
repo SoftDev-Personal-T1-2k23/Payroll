@@ -10,17 +10,6 @@ BUTTON_WIDTH = 20
 def constructor(ui_core, ttc:TooltipController, cache, page_data):
 
     # Split the page into necessary panels
-    ttk.Style().configure("Indent.TFrame", background="#CCC")
-    ttk.Style().configure("Indent.TLabel", background="#CCC")
-    ttk.Style().configure("Public.TFrame", background="#ACA")
-    ttk.Style().configure("Private.TFrame", background="#FEC")
-    ttk.Style().configure("Admin.TFrame", background="#FAA")
-
-    ttk.Style().configure("Red.TFrame", background="#F00")
-    ttk.Style().configure("Green.TFrame", background="#0F0")
-    ttk.Style().configure("Blue.TFrame", background="#00F")
-
-    
     base_frame = ttk.Frame(ui_core.root, padding=15)
 
     # Add the page title
