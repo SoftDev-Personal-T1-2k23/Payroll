@@ -16,7 +16,8 @@ import sys
 
 
 #DIR_ROOT = os.path.abspath(os.path.join(__file__, "..\\.."))
-DIR_ROOT = os.path.abspath(os.path.join(__file__, "..\\.."))
+DIR_ROOT = os.path.abspath(os.path.join(os.path.abspath(sys.executable), "..\\"))
+print(DIR_ROOT)
 EMPLOYEES = None
 PAY_LOGFILE = 'paylog.txt'
 DATABASE = 'employees.csv'
@@ -141,13 +142,13 @@ class Employee:
             if i == self.id:
                 break
             line_num += 1
-        file = pd.read_csv(os.path.dirname(__file__) + "\\" + File)
+        file = pd.read_csv(DIR_ROOT + "\\" + File)
         for i in self.quick_attribute:
             if i != 'last_name' and i != 'first_name':
                 file.loc[line_num, i] = self.quick_attribute[i]
             elif i == 'last_name':
                 file.loc[line_num, 'Name'] = self.first_name + ' ' + self.last_name
-        file.to_csv(os.path.dirname(__file__) + "\\employees.csv", index=False)
+        file.to_csv(DIR_ROOT + "\\employees.csv", index=False)
 
     def __str__(self):
         printer = ''
@@ -368,7 +369,7 @@ def load_employees(data = 'employees.csv'):
 
     raw = []
     global EMPLOYEES
-    with open(os.path.dirname(sys.executable) + "\\" + data, 'r') as file:
+    with open(DIR_ROOT + "\\" + data, 'r') as file:
         for line in file:
             try:
                 temp = line.strip().split(',')
@@ -386,7 +387,7 @@ def process_timecards():
     #reads all timecards from the indicated scv file, and gives them to the nessesary hourly employees.
     #Sallaried and Commissioned employees will not receive timecards
     #defaults timecards.scv
-    with open(os.path.dirname(__file__) + "\\timecards.csv", 'r') as t:
+    with open(DIR_ROOT + "\\timecards.csv", 'r') as t:
         for line in t:
             line = line.strip().split(',')
             emp = EMPLOYEES.find_employee(int(line.pop(0)))
@@ -399,7 +400,7 @@ def process_receipts():
     #reads all receipts from the indicated scv file, and gives them to the nessesary commissioned employees.
     #Sallaried and hourly employees will not receive receipts
     #defaults receipts.scv
-    with open(os.path.dirname(__file__) + "\\receipts.csv", 'r') as r:
+    with open(DIR_ROOT + "\\receipts.csv", 'r') as r:
         for line in r:
             line = line.strip().split(',')
             emp = EMPLOYEES.find_employee(int(line.pop(0)))
@@ -410,12 +411,12 @@ def process_receipts():
 
 def run_payroll():
     global PAY_LOGFILE
-    if os.path.exists(os.path.dirname(__file__) + "\\" + PAY_LOGFILE):
-        os.remove(os.path.dirname(__file__) + "\\" + PAY_LOGFILE)
+    if os.path.exists(DIR_ROOT + "\\" + PAY_LOGFILE):
+        os.remove(DIR_ROOT + "\\" + PAY_LOGFILE)
     issue = []
     for emp in EMPLOYEES.employees:
         issue.append(EMPLOYEES.employees[emp].issue_payment())
-    with open(os.path.dirname(__file__) + "\\" + PAY_LOGFILE, 'w') as pay:
+    with open(DIR_ROOT + "\\" + PAY_LOGFILE, 'w') as pay:
         for i in issue:
             pay.write(i)
 
