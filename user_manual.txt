@@ -1,0 +1,15 @@
+Login Process
+Upon opening the software, the user will be presented with a login page. To proceed, use any employee's first name as the user name and their ID as the password. Once logged in, you will be directed to the main page of the software.
+
+Viewing and Editing Employee Information
+On the main page, the user can view employee information by clicking on the "View" button. The user can also edit employee information by clicking on the "Edit" button. After editing, ensure that all the necessary fields are adjusted and click on the "Save" button to save the changes. Please note that changes made to the employee information will be saved in the database.
+
+Changing Password
+To change the password, the user can access this option on the edit page. The default password is the employee's ID. Please ensure that you select a secure password.
+
+Export and Generate Pay Report
+Please note that the "Export" and "Generate Pay Report" buttons are currently not implemented in the software.
+
+Search Functionality
+Currently, the search functionality is unavailable. We are continuously working to improve the software and will implement this feature in the future updates.
+
