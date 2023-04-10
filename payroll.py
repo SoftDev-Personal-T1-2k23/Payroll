@@ -17,6 +17,19 @@ import sys
 
 #DIR_ROOT = os.path.abspath(os.path.join(__file__, "..\\.."))
 DIR_ROOT = os.path.abspath(os.path.join(os.path.abspath(sys.executable), "..\\"))
+
+'''
+in some cases the above code goes to the wrong spot. 
+If the csv file isn't there this will use the current working directory instead
+'''
+file_path = DIR_ROOT + "\\" + "employees.csv"
+if not(os.path.isfile(file_path)):
+    print("using cwd")
+    DIR_ROOT = os.getcwd()
+
+
+employee_file_path = os.path.join(DIR_ROOT, "employees.csv")
+
 print(DIR_ROOT)
 EMPLOYEES = None
 PAY_LOGFILE = 'paylog.txt'
@@ -323,7 +336,7 @@ def save_info(entry_list):
     route = entry_list[6].get()
     account = entry_list[7].get()
 
-    row = get_row(EMPLOYEES.employees, USER.first_name) - 1
+    row = get_row(EMPLOYEES.employees, USER.first_name)
     # Do something with the information (e.g. save to a file or database)
     df = pd.read_csv('employees.csv')
     df.iloc[row, 1] = first_name + " " + last_name
@@ -347,7 +360,7 @@ def get_id(employees, user):
 #returns the row in the csv file where a users info is stored via the first name
 def get_row(employees, user):
     #created to help when saving the password and other data to the csv
-    target_row = 1
+    target_row = 0
     for key in employees:
         if user == employees[key].first_name:
             return target_row

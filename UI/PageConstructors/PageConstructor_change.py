@@ -77,6 +77,7 @@ def save_info(new_entry, confirm_entry, unmatch_error, save_button):
         hashed_pass = payroll.hash_password(new_pass)
         payroll.USER.password = hashed_pass
         row = payroll.get_row(payroll.EMPLOYEES.employees, payroll.USER.first_name)
+        print("saving password: " + str(row))
         payroll.set_data(row, 13, hashed_pass)
     else:
         unmatch_error.configure(text="Passwords don't match")
