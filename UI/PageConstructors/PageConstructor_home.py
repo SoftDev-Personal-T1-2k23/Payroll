@@ -10,7 +10,7 @@ BUTTON_WIDTH = 20
 def constructor(ui_core, ttc:TooltipController, cache, page_data):
 
     def attempt_logout():
-        logout_success = True
+        logout_success = ui_core.ui_data_interface.attempt_logout()
         if logout_success:
             ui_core.page_controller.open_page("login")
 
