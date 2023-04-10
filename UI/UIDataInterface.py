@@ -27,9 +27,17 @@ class UIDataInterface:
         # Return access level
         return access_level
 
+    def attempt_logout(self):
+        """Attempt to logout of the program
+        
+            Returns:
+                is_logged_out: Whether the current user is logged out or not
+        """
+        # Perform logout
+        return True
+
 
     def attempt_login(self, user:str, password:str):
-        employees = payroll.EMPLOYEES.employees
         """Attempt to login with a provided username/id and password
          
           Params:
@@ -44,6 +52,8 @@ class UIDataInterface:
         Instead of decoding the stored password we hash the given password and check to see if it matches what was stored
 
         '''
+        employees = payroll.EMPLOYEES.employees
+
         # Attempt login with a username/id and password (via backend)
         password = payroll.hash_password(password)
 

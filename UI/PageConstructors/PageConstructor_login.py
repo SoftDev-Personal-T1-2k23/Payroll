@@ -14,7 +14,7 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
 
     #TODO: Account for login_failed_text being hidden, after just being shown, when consecutive logins occur
     def show_login_failed():
-        rx, ry = bottom_frame.winfo_x(), bottom_frame.winfo_y()
+        # rx, ry = bottom_frame.winfo_x(), bottom_frame.winfo_y()
         login_failed_text.pack(pady=(10, 0))
         login_failed_text.after(2000, hide_login_failed)
 
