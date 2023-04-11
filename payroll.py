@@ -24,7 +24,7 @@ If the csv file isn't there this will use the current working directory instead
 '''
 file_path = DIR_ROOT + "\\" + "employees.csv"
 if not(os.path.isfile(file_path)):
-    print("using cwd")
+    # print("using cwd")
     DIR_ROOT = os.getcwd()
 
 
@@ -36,6 +36,8 @@ PAY_LOGFILE = 'paylog.txt'
 DATABASE = 'employees.csv'
 
 USER = None
+#this is to keep track of what the view and edit pages should display
+TARGET_EMPLOYEE = None
 
 
 class Employee:

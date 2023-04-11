@@ -18,8 +18,8 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
 
     header_frame = ttk.Frame(top_frame, height=30)
     #get the user object saved in the payroll file
-    user = payroll.USER
-    emp_title = ttk.Label(header_frame, text= user.first_name + " " + user.last_name , style="Indent.TLabel")
+    employee = payroll.TARGET_USER
+    emp_title = ttk.Label(header_frame, text= employee.first_name + " " + employee.last_name , style="Indent.TLabel")
     pay_report_btn = ttk.Button(header_frame, text="Generate Pay Report")
     csv_btn = ttk.Button(header_frame, text="Export CSV")
 
@@ -39,13 +39,13 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
     #TODO: Add information
 
     target_row = 0
-    for field_name in user.quick_attribute:
-        field_value = user.quick_attribute[field_name]
+    for field_name in employee.quick_attribute:
+        field_value = employee.quick_attribute[field_name]
         frame = None
         #decide which frame the information belongs in based on the categorized lists
-        if field_name in user.general:
+        if field_name in employee.general:
             frame = public_frame
-        elif field_name in user.personal:
+        elif field_name in employee.personal:
             frame = private_frame
         else:
             frame = admin_frame
