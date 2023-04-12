@@ -2,10 +2,16 @@
 
 from tkinter import *
 from tkinter import ttk
-#
 from UI.TooltipController import TooltipController
+import payroll
+#make it so we can use the view page
 
+from .PageConstructor_view import constructor as construct_view
 BUTTON_WIDTH = 20
+
+
+#make a list to keep track of what employees need to be displayed
+display_list = []
 
 def constructor(ui_core, ttc:TooltipController, cache, page_data):
     search_entry_var = StringVar()
@@ -19,9 +25,10 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
     top_frame = ttk.Frame(base_frame)
     title = ttk.Label(top_frame, text="Employee Search", style="Bold.TLabel")
 
+
     # Add a search entry and search button
     search_frame = ttk.Frame(top_frame, height=30)
-    search_btn = ttk.Button(search_frame, text="Search")
+    search_btn = ttk.Button(search_frame, text="Search", command=lambda: search(search_entry_var, results_frame, ui_core))
     search_entry = ttk.Entry(search_frame, width=50, textvariable=search_entry_var)
 
     # Add search filter options
@@ -60,6 +67,8 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
     middle_frame = ttk.Frame(base_frame)
     results_frame = ttk.Frame(middle_frame, width=400, height=300, style="Indent.TFrame")
 
+   
+
     # Add a "to home" button (-> home page) & other "ease of use" buttons
     bottom_frame = ttk.Frame(base_frame, height=50)
     back_btn = ttk.Button(bottom_frame, text="Back", command=ui_core.page_controller.open_prev_page)
@@ -90,3 +99,51 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
 
     bottom_frame.pack(side=LEFT)
     back_btn.pack(side=LEFT)
+
+
+def search(data, results_frame, ui_core):
+    '''
+    This function is called when the search button is pressed
+    it takes the input from the search entry box as a parameter
+    '''
+    # print(data.get())
+
+    #grab the employee database from the payroll file
+    employees = payroll.EMPLOYEES.employees
+
+    #reset the display_list and clear the frame
+    display_list = []
+    for child in results_frame.winfo_children():
+        child.destroy()
+
+
+    #end the function if there is nothing to search
+    if data.get() == "":
+        return None
+
+    #loop through the dictionary of employees
+    for id in employees:
+        #get the individual employee object
+        person = employees[id]
+        #loop through the persons attributes
+        for field_name in person.quick_attribute:
+            #get the actual attribute value
+            field_value = person.quick_attribute[field_name]
+
+            #if the users query appears in the field we are looking at add the employee to the list
+            if data.get() in str(field_value):
+                display_list.append(person)
+
+
+    #make the entries
+    target_row = 0
+    for person in display_list:
+        label = ttk.Label(results_frame, text=person.first_name + " " + person.last_name)
+        label.grid(row=target_row, column=1, padx=10, pady=10)
+        view_btn = ttk.Button(results_frame, text="view", command=lambda i=person: ui_core.page_controller.open_page("view", i))
+        
+        
+
+        view_btn.grid(row=target_row, column=2)
+        target_row += 1
+    results_frame.grid_propagate(False)

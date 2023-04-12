@@ -3,6 +3,7 @@ import os
 import sys
 # import Modules.ModuleLoader as ModuleLoader
 import UI.PageConstructors as PageConstructors
+import payroll
 
 # PAGE_CONSTRUCTOR_DIR = "UI\PageConstructors"
 def LoadPageConstructor(page_id:str):
@@ -62,12 +63,19 @@ class PageController:
         self.clear_page()
         self.page.load(self.ui_core, self.ui_core.tooltip_controller, self.cache, self.page_data)
 
-    def open_page(self, page_id:str) ->None:
+    def open_page(self, page_id:str, employee = None) ->None:
+
         """Clear the current page and open the desired page
         
           Params:
               page_id: The page's associated page_id to load from
+
         """
+        #if there was an employee provided that set the target
+        if employee is not None:
+            # print("EMPLOYEE PROVIDED")
+            payroll.TARGET_USER = employee
+
         # Check if a page exists and clear and store it if it does
         if self.page is not None:
             self.clear_page()
