@@ -60,22 +60,38 @@ class Employee:
         self.route = data[11]
         self.account = data[12]
         self.password = data[13]
+        self.start_date = data[14]
+        self.privilege = data[15]
+        self.department = data[16]
+        self.email = data[17]
+        self.phone = data[18]
+        self.title = data[19]
+        
         self.quick_attribute = {
         #use as a reference for which attribute corrosponds to which number
             'ID': self.id,
-            'last_name': self.last_name,
-            'first_name': self.first_name,
+            'Last name': self.last_name,
+            'First name': self.first_name,
             'Address': self.address,
             'City': self.city,
             'State': self.state,
             'Zip': self.zip,
             'Classification': str(self.classification),
             'PayMethod': self.paymethod,
-            'Salary': self.salary,
-            'Hourly': self.hourly,
-            'Commission': self.commission,
             'Route': self.route,
-            'Account': self.account
+            'Account': self.account,
+            'Start Date': self.start_date,
+            'Privilege': self.privilege,
+            'Department': self.department,
+            'Email': self.email,
+            'Phone': self.phone,
+            'Title': self.title
+
+        }
+        self.pay_type_dict = {
+            "Salary": self.salary,
+            "Hourly": self.hourly,
+            "Commission": self.commission
         }
         self.editable_by_user = {
         #use as a reference for which attribute corrosponds to which number
@@ -86,11 +102,21 @@ class Employee:
             'State': self.state,
             'Zip': self.zip,
             'Route': self.route,
-            'Account': self.account
+            'Account': self.account,
+            'Email': self.email,
+            'Phone': self.phone,
+            'Title': self.title
         }
-        self.general = ["ID", "First name", "Last name", "first_name", "last_name"]
-        self.personal = ["Address", "City", "State", "Zip", "Classification", "PayMethod", "Salary", "Hourly", "Commission"]
+        
+        self.general = ["ID", "First name", "Last name", 'Title', 'Start Date', 'Email', 'Phone', 'Department']
+        self.personal = ["Address", "City", "State", "Zip", "Classification", "PayMethod", "Salary", "Hourly", "Commission", 'Privilege']
         self.sensitive = ["Route", "Account"]
+
+        #put any information you want to be public in the employee dictionary
+        self.privilege_access = {
+            "administrator": self.quick_attribute,
+            "employee": {'First name': self.first_name, 'Last name': self.last_name, 'Email': self.email, 'Phone': self.phone, 'Title': self.title}
+        }
         
         self.set_classification(self, data[7])
 
@@ -165,6 +191,8 @@ class Employee:
                 file.loc[line_num, 'Name'] = self.first_name + ' ' + self.last_name
         file.to_csv(DIR_ROOT + "\\employees.csv", index=False)
 
+
+
     def __str__(self):
         printer = ''
         printer += str(self.id) + ' : '
@@ -236,6 +264,9 @@ class Salaried(Classification):
     def __str__(self):
         return "1"
 
+    def type(self):
+        return "Salary"
+
 
 class Commissioned(Salaried):
     #commissioned employees get payed by salery and by a commission per receipt
@@ -256,6 +287,9 @@ class Commissioned(Salaried):
     def __str__(self):
         return "2"
 
+    def type(self):
+        return "Salary"
+
 
 class Hourly(Classification):
     #hourly employees get payed according to timecards
@@ -275,6 +309,9 @@ class Hourly(Classification):
 
     def __str__(self):
         return "3"
+
+    def type(self):
+        return "Salary"
 
 
 
@@ -326,28 +363,73 @@ def find_employee(employees, user):
             return key
     return False
 
-def save_info(entry_list):
+def save_info(entry_dict):
+    '''
+    takes a dictionary of entry objects as a parameter
+    the dictionary contains field names and the associated entry for that field. 
+    '''
+
+    #make a dictionary mapping field names to column locations in the csv file
+    csv_location = {
+        'ID': 0,
+        'Last name': 1,
+        'First name': 1,
+        'Address': 2,
+        'City': 3,
+        'State': 4,
+        'Zip': 5,
+        'Classification': 6,
+        'PayMethod': 7,
+        'Salary': 8,
+        'Hourly': 9,
+        'Commission': 10,
+        'Route': 11,
+        'Account': 12,
+        'Password': 13,
+        'Start Date': 14,
+        'Privilege': 15,
+        'Department': 16,
+        'Email': 17,
+        'Phone': 18,
+        'Title': 19
+
+    }
+
 
     # Get the information from the fields and save it to a file or database
-    first_name = entry_list[0].get()
-    last_name = entry_list[1].get()
-    address = entry_list[2].get()
-    city = entry_list[3].get()
-    state = entry_list[4].get()
-    zip_code = entry_list[5].get()
-    route = entry_list[6].get()
-    account = entry_list[7].get()
-
-    row = get_row(EMPLOYEES.employees, USER.first_name)
-    # Do something with the information (e.g. save to a file or database)
     df = pd.read_csv('employees.csv')
-    df.iloc[row, 1] = first_name + " " + last_name
-    df.iloc[row, 2] = address
-    df.iloc[row, 3] = city
-    df.iloc[row, 4] = state
-    df.iloc[row, 5] = zip_code
-    df.iloc[row, 11] = route
-    df.iloc[row, 12] = account
+    for field_name in entry_dict:
+        #skip the last name since that is combined with the first
+        if field_name == 'Last name':
+            continue
+        entry = entry_dict[field_name]
+        row = get_row(EMPLOYEES.employees, TARGET_EMPLOYEE.first_name)
+        col = csv_location[field_name]
+        #handle for unique case of first and last name bieng combined in one spot
+        if field_name == "First name":
+            df.iloc[row, col] = entry_dict['First name'].get() + " " + entry_dict['Last name'].get()
+        else:
+            df.iloc[row, col] = entry.get()
+
+    # first_name = entry_list[0].get()
+    # last_name = entry_list[1].get()
+    # address = entry_list[2].get()
+    # city = entry_list[3].get()
+    # state = entry_list[4].get()
+    # zip_code = entry_list[5].get()
+    # route = entry_list[6].get()
+    # account = entry_list[7].get()
+
+    # row = get_row(EMPLOYEES.employees, TARGET_EMPLOYEE.first_name)
+    # # Do something with the information (e.g. save to a file or database)
+    # df = pd.read_csv('employees.csv')
+    # df.iloc[row, 1] = first_name + " " + last_name
+    # df.iloc[row, 2] = address
+    # df.iloc[row, 3] = city
+    # df.iloc[row, 4] = state
+    # df.iloc[row, 5] = zip_code
+    # df.iloc[row, 11] = route
+    # df.iloc[row, 12] = account
     df.to_csv('employees.csv', index=False)
 
 

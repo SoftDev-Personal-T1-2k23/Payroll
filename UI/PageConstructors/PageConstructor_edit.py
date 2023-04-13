@@ -19,8 +19,10 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
     title = ttk.Label(top_frame, text="Employee View", style="Bold.TLabel")
 
     header_frame = ttk.Frame(top_frame, height=30)
-    user = payroll.USER
-    emp_title = ttk.Label(header_frame, text=user.first_name + " " + user.last_name, style="Indent.TLabel")
+
+    employee = payroll.TARGET_EMPLOYEE
+    print(employee.first_name)
+    emp_title = ttk.Label(header_frame, text=employee.first_name + " " + employee.last_name, style="Indent.TLabel")
     pay_report_btn = ttk.Button(header_frame, text="Generate Pay Report")
     csv_btn = ttk.Button(header_frame, text="Export CSV")
 
@@ -38,17 +40,27 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
 
     # Populate the three panels with the relevant stored information (text labels)
     
+    #decide what dictionary of information the user should have access to
+    target_dictionary = {}
+    #check if the user is viewing themself
+    if payroll.USER.id == employee.id:
+        target_dictionary = employee.editable_by_user
+    #Decide what to display based on the privilege level
+    else:
+        #set the target_dictionary to whatever dictionary is associated with the users privilege level via the privilege_access dictionary
+        target_dictionary = employee.privilege_access[payroll.USER.privilege]
+
     # get the user fields and create entries and store them in a list
-    entry_list = []
-    user = payroll.USER
+    entry_dict = {}
+
     target_row = 0
-    for field_name in user.editable_by_user:
-        field_value = user.editable_by_user[field_name]
+    for field_name in target_dictionary:
+        field_value = target_dictionary[field_name]
         frame = None
         #decide which frame the information belongs in based on the categorized lists
-        if field_name in user.general:
+        if field_name in employee.general:
             frame = public_frame
-        elif field_name in user.personal:
+        elif field_name in employee.personal:
             frame = private_frame
         else:
             frame = admin_frame
@@ -59,8 +71,8 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
         temp_entry = ttk.Entry(frame)
         temp_entry.insert(0, field_value)
         temp_entry.grid(column=1, row=target_row, padx=5, pady=5)
-        # entry_list.append(temp_label)
-        entry_list.append(temp_entry)
+        
+        entry_dict[field_name] = temp_entry
         target_row += 1
 
 
@@ -69,7 +81,7 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
 
     change_btn.grid(column=1, row=target_row, padx=5, pady=5)
     # Create Save button
-    save_btn = ttk.Button(middle_frame, text="Save", command=lambda: payroll.save_info(entry_list))
+    save_btn = ttk.Button(middle_frame, text="Save", command=lambda: payroll.save_info(entry_dict))
     # save_button.grid(column=1, row=2, padx=5, pady=5)
 
     # Validate shown fields, if changed

@@ -74,7 +74,8 @@ class PageController:
         #if there was an employee provided that set the target
         if employee is not None:
             # print("EMPLOYEE PROVIDED")
-            payroll.TARGET_USER = employee
+            payroll.TARGET_EMPLOYEE = employee
+ 
 
         # Check if a page exists and clear and store it if it does
         if self.page is not None:

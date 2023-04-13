@@ -29,7 +29,7 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
     button_frame = ttk.Frame(login_frame)
     search_btn = ttk.Button(button_frame, text="Search", width=BUTTON_WIDTH, command=lambda: ui_core.page_controller.open_page("search"))
     ttc.add_tooltip(search_btn, "home_search_button", (-170, 0), "Search Page", "Search the employee database")
-    edit_btn = ttk.Button(button_frame, text="Edit Information", width=BUTTON_WIDTH, command=lambda: ui_core.page_controller.open_page("edit"))
+    edit_btn = ttk.Button(button_frame, text="Edit Information", width=BUTTON_WIDTH, command=lambda: ui_core.page_controller.open_page("edit", payroll.USER))
     ttc.add_tooltip(edit_btn, "home_edit_button", (-175, 0), "Edit Page", "Edit your employee information")
     view_btn = ttk.Button(button_frame, text="View Information", width=BUTTON_WIDTH, command=lambda: ui_core.page_controller.open_page("view", payroll.USER))
     ttc.add_tooltip(view_btn, "home_view_button", (-178, 0), "View Page", "View your employee information")
