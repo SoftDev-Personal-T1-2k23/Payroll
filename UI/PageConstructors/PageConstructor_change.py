@@ -1,9 +1,8 @@
 import tkinter as tk
 from tkinter import *
 from tkinter import ttk
-#
 from UI.TooltipController import TooltipController
-import payroll
+
 BUTTON_WIDTH = 20
 
 def constructor(ui_core, ttc:TooltipController, cache, page_data):
@@ -11,8 +10,19 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
     ttk.Style().configure("Indent.TLabel", background="#CCC")
     ttk.Style().configure("Middle.TFrame", background="#c0c6cf")
 
-
-    user = payroll.USER
+    def save_info(new_entry, confirm_entry, unmatch_error, save_button): #Nested for ui_core param scope
+        # Get the information from the fields and save it to a file or database
+        # Do something with the information (e.g. save to a file or database)
+        new_pass = new_entry.get()
+        confirm_pass = confirm_entry.get()
+        if new_pass == confirm_pass:
+            unmatch_error.configure(text="Change succesful!", foreground="blue")
+            save_button.grid(row=3)
+            ui_core.ui_data_interface.set_new_password(new_pass)
+        else:
+            unmatch_error.configure(text="Passwords don't match")
+            save_button.grid(row=3)
+    
 
     base_frame = ttk.Frame(ui_core.root, padding=15)
 
@@ -65,23 +75,3 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
    
     bottom_frame.pack(side=LEFT)
     back_btn.pack(side=LEFT)
-
-
-def save_info(new_entry, confirm_entry, unmatch_error, save_button):
-    # Get the information from the fields and save it to a file or database
-    new_pass = new_entry.get()
-    confirm_pass = confirm_entry.get()
-    if new_pass == confirm_pass:
-        unmatch_error.configure(text="Change succesful!", foreground="blue")
-        save_button.grid(row=3)
-        hashed_pass = payroll.hash_password(new_pass)
-        payroll.USER.password = hashed_pass
-        row = payroll.get_row(payroll.EMPLOYEES.employees, payroll.USER.first_name)
-        print("saving password: " + str(row))
-        payroll.set_data(row, 13, hashed_pass)
-    else:
-        unmatch_error.configure(text="Passwords don't match")
-        save_button.grid(row=3)
-    
-    # Do something with the information (e.g. save to a file or database)
-
