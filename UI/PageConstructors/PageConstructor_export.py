@@ -2,7 +2,6 @@
 
 from tkinter import *
 from tkinter import ttk
-#
 from UI.TooltipController import TooltipController
 
 BUTTON_WIDTH = 20

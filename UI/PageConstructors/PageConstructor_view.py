@@ -4,10 +4,13 @@ from tkinter import *
 from tkinter import ttk
 #
 from UI.TooltipController import TooltipController
-import payroll
 BUTTON_WIDTH = 20
 
 def constructor(ui_core, ttc:TooltipController, cache, page_data):
+    udi = ui_core.ui_data_interface
+
+    user_id = udi.get_user_id()
+    user_access_level = udi.get_access_level()
 
     # Split the page into necessary panels
     base_frame = ttk.Frame(ui_core.root, padding=15)
@@ -18,8 +21,8 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
 
     header_frame = ttk.Frame(top_frame, height=30)
 
-    #get the user object saved in the payroll file
-    employee = payroll.TARGET_EMPLOYEE
+    #get the user object saved in the payroll file 
+    employee = udi.get_target_employee()
 
     emp_title = ttk.Label(header_frame, text= employee.first_name + " " + employee.last_name , style="Indent.TLabel")
     pay_report_btn = ttk.Button(header_frame, text="Generate Pay Report")
@@ -42,12 +45,12 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
     #decide what dictionary of information the user should have access to
     target_dictionary = {}
     #check if the user is viewing themself
-    if payroll.USER.id == employee.id:
+    if user_id == employee.id:
         target_dictionary = employee.quick_attribute
     #Decide what to display based on the privilege level
     else:
         #set the target_dictionary to whatever dictionary is associated with the users privilege level via the privilege_access dictionary
-        target_dictionary = employee.privilege_access[payroll.USER.privilege]
+        target_dictionary = employee.privilege_access[user_access_level]
     # print(target_dictionary)
 
     target_row = 0
@@ -121,7 +124,7 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
     bottom_frame.pack(side=LEFT)
     back_btn.pack(side=LEFT)
     #make an edit button if the user is viewing their own page or if they have administrator privileges
-    if employee.id == payroll.USER.id or payroll.USER.privilege == "administrator":
+    if employee.id == user_id or user_access_level == "administrator":
         edit_btn = ttk.Button(bottom_frame, text="edit", command=lambda i=employee: ui_core.page_controller.open_page("edit", i))
         edit_btn.pack(side = LEFT)
     # else:

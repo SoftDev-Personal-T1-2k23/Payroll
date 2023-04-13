@@ -4,12 +4,11 @@
 import tkinter as tk
 from tkinter import *
 from tkinter import ttk
-#
 from UI.TooltipController import TooltipController
-import payroll
 BUTTON_WIDTH = 20
 
 def constructor(ui_core, ttc:TooltipController, cache, page_data):
+    udi = ui_core.ui_data_interface
 
     # Split the page into necessary panels
     base_frame = ttk.Frame(ui_core.root, padding=15)
@@ -20,7 +19,7 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
 
     header_frame = ttk.Frame(top_frame, height=30)
 
-    employee = payroll.TARGET_EMPLOYEE
+    employee = udi.get_target_employee()
     print(employee.first_name)
     emp_title = ttk.Label(header_frame, text=employee.first_name + " " + employee.last_name, style="Indent.TLabel")
     pay_report_btn = ttk.Button(header_frame, text="Generate Pay Report")
@@ -41,14 +40,7 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
     # Populate the three panels with the relevant stored information (text labels)
     
     #decide what dictionary of information the user should have access to
-    target_dictionary = {}
-    #check if the user is viewing themself
-    if payroll.USER.id == employee.id:
-        target_dictionary = employee.editable_by_user
-    #Decide what to display based on the privilege level
-    else:
-        #set the target_dictionary to whatever dictionary is associated with the users privilege level via the privilege_access dictionary
-        target_dictionary = employee.privilege_access[payroll.USER.privilege]
+    target_dictionary = udi.get_target_employee_information(employee)
 
     # get the user fields and create entries and store them in a list
     entry_dict = {}
@@ -81,7 +73,7 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
 
     change_btn.grid(column=1, row=target_row, padx=5, pady=5)
     # Create Save button
-    save_btn = ttk.Button(middle_frame, text="Save", command=lambda: payroll.save_info(entry_dict))
+    save_btn = ttk.Button(middle_frame, text="Save", command=lambda: udi.update_employee_info(entry_dict))
     # save_button.grid(column=1, row=2, padx=5, pady=5)
 
     # Validate shown fields, if changed

@@ -3,7 +3,6 @@
 from tkinter import *
 from tkinter import ttk
 from UI.TooltipController import TooltipController
-import payroll
 #make it so we can use the view page
 
 from .PageConstructor_view import constructor as construct_view
@@ -107,9 +106,10 @@ def search(data, results_frame, ui_core):
     it takes the input from the search entry box as a parameter
     '''
     # print(data.get())
+    udi = ui_core.ui_data_interface
 
-    #grab the employee database from the payroll file
-    employees = payroll.EMPLOYEES.employees
+    #grab the employee database
+    employees = udi.get_employees()
 
     #reset the display_list and clear the frame
     display_list = []
