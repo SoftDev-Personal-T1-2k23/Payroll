@@ -71,7 +71,8 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
 
     # Add a "to home" button (-> home page) & other "ease of use" buttons
     bottom_frame = ttk.Frame(base_frame, height=50)
-    back_btn = ttk.Button(bottom_frame, text="Back", command=ui_core.page_controller.open_prev_page)
+    # back_btn = ttk.Button(bottom_frame, text="Back", command=ui_core.page_controller.open_prev_page)
+    back_btn = ttk.Button(bottom_frame, text="Back", command=lambda: ui_core.page_controller.open_page("home"))
 
 
 

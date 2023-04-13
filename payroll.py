@@ -70,8 +70,8 @@ class Employee:
         self.quick_attribute = {
         #use as a reference for which attribute corrosponds to which number
             'ID': self.id,
-            'Last name': self.last_name,
             'First name': self.first_name,
+            'Last name': self.last_name,
             'Address': self.address,
             'City': self.city,
             'State': self.state,
