@@ -19,7 +19,7 @@ import sys
 DIR_ROOT = os.path.abspath(os.path.join(os.path.abspath(sys.executable), "..\\"))
 
 '''
-in some cases the above code goes to the wrong spot. 
+in some cases the above code goes to the wrong spot. This happens when its not compiled as an executable. For testing purposes we need this code 
 If the csv file isn't there this will use the current working directory instead
 '''
 file_path = DIR_ROOT + "\\" + "employees.csv"
@@ -34,6 +34,7 @@ print(DIR_ROOT)
 EMPLOYEES = None
 PAY_LOGFILE = 'paylog.txt'
 DATABASE = 'employees.csv'
+
 
 USER = None
 #this is to keep track of what the view and edit pages should display

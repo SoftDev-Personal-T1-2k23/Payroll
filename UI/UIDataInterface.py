@@ -132,14 +132,18 @@ class UIDataInterface:
             target_dictionary = employee.privilege_access[payroll.USER.privilege]
         return target_dictionary
     
-    def set_target_employee(self) -> bool:
+    def set_target_employee(self, employee) -> bool:
         """Sets the payroll's target employee
-        
+            Params:
+                the function has to know what employee should be targeted. 
+                the target employee will change based on which employee the user is trying to view. 
+                If the user clicks the view button for Teagan then a page for Teagan should pop up
             Returns:
                 success: Whether the operation was successful
         """
         #if there was an employee provided that set the target
-        employee = payroll.USER
+        if employee == None:
+            employee = payroll.USER
         if employee is not None:
             # print("EMPLOYEE PROVIDED")
             payroll.TARGET_EMPLOYEE = employee
