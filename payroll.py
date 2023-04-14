@@ -228,6 +228,8 @@ class Database:
     def find_employee(self, value, attribute = 'ID'):
         #takes an attribute to search by, then returns all employees who match the given value
         #defaults to a search by id
+        print(value)
+        print(self.employees)
         if attribute == 'ID':
             try:
                 return self.employees[int(value)]

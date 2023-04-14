@@ -3,16 +3,14 @@
 from tkinter import *
 from tkinter import ttk
 from os import path
-#
 from UI.TooltipController import TooltipController
 
 def constructor(ui_core, ttc:TooltipController, cache, page_data):
-    root:Tk = ui_core.root
     username_var = StringVar()
     password_var = StringVar()
     login_failed_text:ttk.Label = None
 
-    #TODO: Account for login_failed_text being hidden, after just being shown, when consecutive logins occur
+    #TODO: Account for login_failed_text being hidden, after just being shown, when consecutive login attempts occur
     def show_login_failed():
         # rx, ry = bottom_frame.winfo_x(), bottom_frame.winfo_y()
         login_failed_text.pack(pady=(10, 0))

@@ -69,8 +69,7 @@ class UIDataInterface:
             # print("FOUND EMPLOYEE")
             #get the users id
             user_id = payroll.get_id(employees, user)
-            print(user_id)
-            print(user)
+
             #user the id to get the employees password and check it against the users input
             if password == employees[user_id].password:
                 print("PASSWORD MATCH")
@@ -80,7 +79,7 @@ class UIDataInterface:
             else:
                 print("PASSWORD MISMATCH")
         # else:
-            # print("FAILED TO FIND EMPLOYEE")
+        #     print("FAILED TO FIND EMPLOYEE")
         #return false if the information wasn't validated
         return False
 
