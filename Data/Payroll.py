@@ -12,20 +12,15 @@ import hashlib
 import pandas as pd
 from Data.FileConstants import DIR_ROOT
 from Data.Employee import Employee
-import Data.FileReader
-import Data.FileWriter
+from Data.FileReader import FileReader
+from Data.FileWriter import FileWriter
 
-employee_file_path = os.path.join(DIR_ROOT, "employees.csv")
-
-# print(DIR_ROOT)
-EMPLOYEES = None
 PAY_LOGFILE = 'paylog.txt'
 DATABASE = 'employees.csv'
 
-
+EMPLOYEES = None
 USER = None
-#this is to keep track of what the view and edit pages should display
-TARGET_EMPLOYEE = None
+TARGET_EMPLOYEE = None #this is to keep track of what the view and edit pages should display
 
 class Database:
     #contains a dictionary of all employees with their id as a key, as well as expedient methods
@@ -52,8 +47,6 @@ class Database:
     def find_employee(self, value, attribute = 'ID'):
         #takes an attribute to search by, then returns all employees who match the given value
         #defaults to a search by id
-        print(value)
-        print(self.employees)
         if attribute == 'ID':
             try:
                 return self.employees[int(value)]
@@ -89,30 +82,41 @@ def initialize_passwords():
     '''
     this function is for creating the hashed passwords based on the user id if the password has not yet been initialized
     '''
-    #first figure out how many employees there are
-    with open('employees.csv', mode='r') as file:
-        # Create a reader object
-        reader = csv.reader(file)
-        # Use a generator expression to count the number of non-empty rows
-        num_rows = sum(1 for row in reader if any(row))
-    num_rows -= 1 #subtract 1 for the header row
+    # Read the CSV file
+    csv_data = FileReader.read_csv('employees.csv')
+    # Check for null passwords & Add new ones if necessary
+    for row in csv_data.rows:
+        print(row)
+        # Check if current pass exists
+        curr_pass = csv_data.get_row_value(row, "Password")
+        if curr_pass is None:
+            # Get new password
+            user_id = csv_data.get_row_value(row, "ID")
+            new_pass = hash_password(user_id)
+            # Set new password
+            csv_data.set_row_value(row, "Password", new_pass)
+    # Update CSV file contents
+    FileWriter.write_csv('employees.csv', csv_data)
 
-    # Read the CSV file into a DataFrame
-    df = pd.read_csv('employees.csv')
-   
+    #first figure out how many employees there are
+    # with open('employees.csv', mode='r') as file:
+    #     # Create a reader object
+    #     reader = csv.reader(file)
+    #     # Use a generator expression to count the number of non-empty rows
+    #     num_rows = sum(1 for row in reader if any(row))
+    # num_rows -= 1 #subtract 1 for the header row
     
-    for i in range(num_rows):
-      
-        if pd.isnull(df.iloc[i, 13]):
-            #get the id
-            user_id = df.iloc[i, 0]
-            password = hash_password(str(user_id))
+    # for i in range(num_rows):
+    #     if pd.isnull(df.iloc[i, 13]):
+    #         #get the id
+    #         user_id = df.iloc[i, 0]
+    #         password = hash_password(str(user_id))
           
-            # Edit the cell at row 4, column 13
-            df.iloc[i, 13] = password
+    #         # Edit the cell at row 4, column 13
+    #         df.iloc[i, 13] = password
 
     # Write the updated DataFrame back to the CSV file
-    df.to_csv('employees.csv', index=False)
+    # df.to_csv('employees.csv', index=False)
 
  #helper function for checking if an employee exists via the username
 def find_employee(employees, user):
