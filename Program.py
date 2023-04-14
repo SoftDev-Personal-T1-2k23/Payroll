@@ -1,10 +1,10 @@
 #> Program.py
 # Initializes the program and its components
 from UI.UICore import UICore
-import payroll
+import Data.Payroll as Payroll
 
 # Initialize backend components
-payroll.load_employees()
+Payroll.load_employees()
 
 # Initialize UICore
 ui_core = UICore(start_page="login")

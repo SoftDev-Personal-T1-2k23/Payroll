@@ -1,4 +1,4 @@
-import payroll
+import Data.Payroll as Payroll
 
 class UIDataInterface:
     """An interface for communication with non-UI parts of the program"""
@@ -21,7 +21,7 @@ class UIDataInterface:
                 user_id: The current user's employee ID
         """
         # Return the login user's ID
-        return payroll.USER.id
+        return Payroll.USER.id
     
     def get_access_level(self) -> str:
         """Return the current user's access level
@@ -30,7 +30,7 @@ class UIDataInterface:
             access_level: The user's access level
         """
         # Request the current user's access level from the backend
-        access_level = payroll.USER.privilege
+        access_level = Payroll.USER.privilege
         # Return access level
         return access_level
 
@@ -59,21 +59,21 @@ class UIDataInterface:
         Instead of decoding the stored password we hash the given password and check to see if it matches what was stored
 
         '''
-        employees = payroll.EMPLOYEES.employees
+        employees = Payroll.EMPLOYEES.employees
 
         # Attempt login with a username/id and password (via backend)
-        password = payroll.hash_password(password)
+        password = Payroll.hash_password(password)
 
         #first check if the employees name exists in the database
-        if payroll.find_employee(employees, user):
+        if Payroll.find_employee(employees, user):
             # print("FOUND EMPLOYEE")
             #get the users id
-            user_id = payroll.get_id(employees, user)
+            user_id = Payroll.get_id(employees, user)
 
             #user the id to get the employees password and check it against the users input
             if password == employees[user_id].password:
                 print("PASSWORD MATCH")
-                payroll.USER = employees[user_id] 
+                Payroll.USER = employees[user_id] 
                 #if all the information matches return True  
                 return True
             else:
@@ -102,7 +102,7 @@ class UIDataInterface:
                 employees: A collection of all(?) employees
         """
         # Return a collection of employees
-        return payroll.EMPLOYEES.employees
+        return Payroll.EMPLOYEES.employees
 
     def get_target_employee(self):
         """Return the current target employee
@@ -111,7 +111,7 @@ class UIDataInterface:
                 target_employee: The current target employee's information
         """
         # Return the target employee
-        return payroll.TARGET_EMPLOYEE
+        return Payroll.TARGET_EMPLOYEE
 
     def get_target_employee_information(self, employee):
         """Return the current target employee's information
@@ -123,12 +123,12 @@ class UIDataInterface:
         """
         #check if the user is viewing themself
         target_dictionary = {}
-        if payroll.USER.id == employee.id:
+        if Payroll.USER.id == employee.id:
             target_dictionary = employee.editable_by_user
             #Decide what to display based on the privilege level
         else:
             #set the target_dictionary to whatever dictionary is associated with the users privilege level via the privilege_access dictionary
-            target_dictionary = employee.privilege_access[payroll.USER.privilege]
+            target_dictionary = employee.privilege_access[Payroll.USER.privilege]
         return target_dictionary
     
     def set_target_employee(self, employee) -> bool:
@@ -142,10 +142,10 @@ class UIDataInterface:
         """
         #if there was an employee provided that set the target
         if employee == None:
-            employee = payroll.USER
+            employee = Payroll.USER
         if employee is not None:
             # print("EMPLOYEE PROVIDED")
-            payroll.TARGET_EMPLOYEE = employee
+            Payroll.TARGET_EMPLOYEE = employee
             return True
         return False
         
@@ -182,7 +182,7 @@ class UIDataInterface:
         Returns:
             success: Whether the new employee information was applied successfully or not
         """
-        payroll.save_info(emp_info)
+        Payroll.save_info(emp_info)
         return True
 
     def archive_employee(self, emp_id:str) -> bool:
@@ -225,9 +225,9 @@ class UIDataInterface:
             Returns:
                 success: Whether the change was successful
         """
-        hashed_pass = payroll.hash_password(password)
-        payroll.USER.password = hashed_pass
-        row = payroll.get_row(payroll.EMPLOYEES.employees, payroll.USER.first_name)
+        hashed_pass = Payroll.hash_password(password)
+        Payroll.USER.password = hashed_pass
+        row = Payroll.get_row(Payroll.EMPLOYEES.employees, Payroll.USER.first_name)
         print("saving password: " + str(row))
-        payroll.set_data(row, 13, hashed_pass)
+        Payroll.set_data(row, 13, hashed_pass)
         return True
