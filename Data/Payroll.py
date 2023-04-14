@@ -86,7 +86,6 @@ def initialize_passwords():
     csv_data = FileReader.read_csv('employees.csv')
     # Check for null passwords & Add new ones if necessary
     for row in csv_data.rows:
-        print(row)
         # Check if current pass exists
         curr_pass = csv_data.get_row_value(row, "Password")
         if curr_pass is None:
