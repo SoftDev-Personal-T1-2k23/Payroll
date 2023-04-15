@@ -15,8 +15,8 @@ from Data.Employee import Employee
 from Data.FileReader import FileReader
 from Data.FileWriter import FileWriter
 
-PAY_LOGFILE = 'paylog.txt'
-DATABASE = 'employees.csv'
+PATH_PAYLOG = os.path.join(DIR_ROOT, "paylog.txt")
+PATH_EMPLOYEE_DATA = os.path.join(DIR_ROOT, "employees.csv")
 
 EMPLOYEES = None
 USER = None
@@ -24,16 +24,20 @@ TARGET_EMPLOYEE = None #this is to keep track of what the view and edit pages sh
 
 class Database:
     #contains a dictionary of all employees with their id as a key, as well as expedient methods
-    def __init__(self, data):
+    def __init__(self):
+        emp_csv_data = FileReader.read_csv(PATH_EMPLOYEE_DATA)
+
+        self.employee_csv_data = emp_csv_data
         self.employees = {}
-        self.data = data
-        for i in data:
-            employee = Employee(i)
+
+        # Create employees
+        for row in emp_csv_data.rows:
+            employee = Employee(emp_csv_data.columns, row)
             self.add_employee(employee)
 
     def add_employee(self, employee):
         #takes an employee object and adds it to the employees dictionary
-        self.employees[employee.id] = employee
+        self.employees[employee.data["ID"]] = employee
 
     def change_employee(self, id, change_list, file = "employees.csv"):
         #takes an id and attributes to change, stored in a list of tuples, then changes the values of said atributes for the target employee
@@ -120,77 +124,73 @@ def initialize_passwords():
  #helper function for checking if an employee exists via the username
 def find_employee(employees, user):
     for key in employees:
-        if user == employees[key].first_name:
+        if user == employees[key].data["FirstName"]:
             return key
     return False
 
+# make a dictionary mapping field names to column locations in the csv file
+EMPLOYEE_ENTRY_LOOKUP = {
+    'ID': 0,
+    'Last name': 1,
+    'First name': 1,
+    'Address': 2,
+    'City': 3,
+    'State': 4,
+    'Zip': 5,
+    'Classification': 6,
+    'PayMethod': 7,
+    'Salary': 8,
+    'Hourly': 9,
+    'Commission': 10,
+    'Route': 11,
+    'Account': 12,
+    'Password': 13,
+    'Start Date': 14,
+    'Privilege': 15,
+    'Department': 16,
+    'Email': 17,
+    'Phone': 18,
+    'JobTitle': 19
+}
 def save_info(entry_dict):
     '''
     takes a dictionary of entry objects as a parameter
     the dictionary contains field names and the associated entry for that field. 
     '''
-
-    #make a dictionary mapping field names to column locations in the csv file
-    csv_location = {
-        'ID': 0,
-        'Last name': 1,
-        'First name': 1,
-        'Address': 2,
-        'City': 3,
-        'State': 4,
-        'Zip': 5,
-        'Classification': 6,
-        'PayMethod': 7,
-        'Salary': 8,
-        'Hourly': 9,
-        'Commission': 10,
-        'Route': 11,
-        'Account': 12,
-        'Password': 13,
-        'Start Date': 14,
-        'Privilege': 15,
-        'Department': 16,
-        'Email': 17,
-        'Phone': 18,
-        'Title': 19
-
-    }
-
-
-    # Get the information from the fields and save it to a file or database
+    # # Get the information from the fields and save it to a file or database
     df = pd.read_csv('employees.csv')
     for field_name in entry_dict:
         #skip the last name since that is combined with the first
         if field_name == 'Last name':
             continue
         entry = entry_dict[field_name]
-        row = get_row(EMPLOYEES.employees, TARGET_EMPLOYEE.first_name)
-        col = csv_location[field_name]
+        row = get_row(EMPLOYEES.employees, TARGET_EMPLOYEE.data["FirstName"])
+        col = EMPLOYEE_ENTRY_LOOKUP[field_name]
         #handle for unique case of first and last name bieng combined in one spot
         if field_name == "First name":
             df.iloc[row, col] = entry_dict['First name'].get() + " " + entry_dict['Last name'].get()
         else:
             df.iloc[row, col] = entry.get()
 
-    # first_name = entry_list[0].get()
-    # last_name = entry_list[1].get()
-    # address = entry_list[2].get()
-    # city = entry_list[3].get()
-    # state = entry_list[4].get()
-    # zip_code = entry_list[5].get()
-    # route = entry_list[6].get()
-    # account = entry_list[7].get()
+    # # first_name = entry_list[0].get()
+    # # last_name = entry_list[1].get()
+    # # address = entry_list[2].get()
+    # # city = entry_list[3].get()
+    # # state = entry_list[4].get()
+    # # zip_code = entry_list[5].get()
+    # # route = entry_list[6].get()
+    # # account = entry_list[7].get()
 
-    # row = get_row(EMPLOYEES.employees, TARGET_EMPLOYEE.first_name)
-    # # Do something with the information (e.g. save to a file or database)
-    # df = pd.read_csv('employees.csv')
-    # df.iloc[row, 1] = first_name + " " + last_name
-    # df.iloc[row, 2] = address
-    # df.iloc[row, 3] = city
-    # df.iloc[row, 4] = state
-    # df.iloc[row, 5] = zip_code
-    # df.iloc[row, 11] = route
-    # df.iloc[row, 12] = account
+    # # row = get_row(EMPLOYEES.employees, TARGET_EMPLOYEE.first_name)
+    # # # Do something with the information (e.g. save to a file or database)
+    # # df = pd.read_csv('employees.csv')
+    # # df.iloc[row, 1] = first_name + " " + last_name
+    # # df.iloc[row, 2] = address
+    # # df.iloc[row, 3] = city
+    # # df.iloc[row, 4] = state
+    # # df.iloc[row, 5] = zip_code
+    # # df.iloc[row, 11] = route
+    # # df.iloc[row, 12] = account
     df.to_csv('employees.csv', index=False)
 
 
@@ -198,7 +198,7 @@ def save_info(entry_dict):
 #helper function for getting the id of a user via the first name
 def get_id(employees, user):
     for key in employees:
-        if user == employees[key].first_name:
+        if user == employees[key].data["FirstName"]:
             return key
     return None
 
@@ -207,7 +207,7 @@ def get_row(employees, user):
     #created to help when saving the password and other data to the csv
     target_row = 0
     for key in employees:
-        if user == employees[key].first_name:
+        if user == employees[key].data["FirstName"]:
             return target_row
         target_row += 1
     return None
@@ -217,13 +217,15 @@ def set_data(row, col, data):
     df.iloc[row, col] = data
     df.to_csv('employees.csv', index=False)
 
-    
+
+def load_database():
+    """Initialize the database"""
+    #Startup the database and store a hoisted reference
+    global EMPLOYEES
+    EMPLOYEES = Database()
 
 def load_employees(data = 'employees.csv'):
     #reads all employees in from the indicated csv file. Defaults employees.csv
-
-    #before loading the employees make sure they have passwords
-    initialize_passwords()
 
     raw = []
     global EMPLOYEES

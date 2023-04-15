@@ -24,7 +24,7 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
     #get the user object saved in the payroll file 
     employee = udi.get_target_employee()
 
-    emp_title = ttk.Label(header_frame, text= employee.first_name + " " + employee.last_name , style="Indent.TLabel")
+    emp_title = ttk.Label(header_frame, text= employee.data["FirstName"] + " " + employee.data["LastName"] , style="Indent.TLabel")
     pay_report_btn = ttk.Button(header_frame, text="Generate Pay Report")
     csv_btn = ttk.Button(header_frame, text="Export CSV")
 
@@ -45,7 +45,7 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
     #decide what dictionary of information the user should have access to
     target_dictionary = {}
     #check if the user is viewing themself
-    if user_id == employee.id:
+    if user_id == employee.data["ID"]:
         target_dictionary = employee.quick_attribute
     #Decide what to display based on the privilege level
     else:
@@ -124,7 +124,7 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
     bottom_frame.pack(side=LEFT)
     back_btn.pack(side=LEFT)
     #make an edit button if the user is viewing their own page or if they have administrator privileges
-    if employee.id == user_id or user_access_level == "administrator":
+    if employee.data["ID"] == user_id or user_access_level == "administrator":
         edit_btn = ttk.Button(bottom_frame, text="edit", command=lambda i=employee: ui_core.page_controller.open_page("edit", i))
         edit_btn.pack(side = LEFT)
     # else:

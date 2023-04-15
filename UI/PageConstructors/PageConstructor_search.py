@@ -139,7 +139,7 @@ def search(data, results_frame, ui_core):
     #make the entries
     target_row = 0
     for person in display_list:
-        label = ttk.Label(results_frame, text=person.first_name + " " + person.last_name)
+        label = ttk.Label(results_frame, text=person.data["FirstName"] + " " + person.data["LastName"])
         label.grid(row=target_row, column=1, padx=10, pady=10)
         view_btn = ttk.Button(results_frame, text="view", command=lambda i=person: ui_core.page_controller.open_page("view", i))
         

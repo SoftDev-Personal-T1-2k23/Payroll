@@ -1,4 +1,4 @@
-ID,Name,Address,City,State,Zip,Classification,PayMethod,Salary,Hourly,Commission,Route,Account,Password,start date,privilege,department,email,phone,title
+ID,Name,Address,City,State,Zip,ClassificationId,PayMethod,Salary,Hourly,Commission,Route,Account,Password,StartDate,Privilege,Department,Email,Phone,JobTitle
 688997,Karina Gay,998 Vitae St.,Atlanta,GA,45169,1,1,45884.99,46.92,34,30417353-K,465794-3611,257aa184898fd161a059f24fe0484010745c28a1f5b0147cfd7718cca7fabf22,3/23/2010,administrator,IT,coolManager@gmail.com,555-321-9876,Cloud Solutions Architect
 522759,TaShya D. Snow,2624 Hendrerit St.,College,AK,99789,2,2,50005.5,68.13,25,36644938-8,244269-0000,9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08,9/3/2002,employee,Fincanial,TaShyaSnow@gmail.com,555-456-1234,Investment Analyst
 165966,Rooney Alvarado,4963 Nisl. St. Ap #185,Gillette,WY,20226,2,3,34532.37,21.53,24,37324307-8,422046-0739,541405b76280d1dc48192a599c38a797ae011fd2978fbc8dd3bafff02441cd90,5/17/1999,employee,HR,RooneyAlvarado@gmail.com,555-789-0123,Talent Acquisition Specialist

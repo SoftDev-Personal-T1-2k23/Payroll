@@ -7,70 +7,89 @@ from Data.FileConstants import DIR_ROOT
 
 class Employee:
     #Employee object contain their name, id, payment info, classification info, and adress
-    def __init__(self, data):
-        name_raw = data[1].split(' ')
-        name_join  = ''
-        self.id = data[0]
-        self.last_name = name_raw.pop()
-        self.first_name = name_join.join(name_raw)
-        self.address = data[2]
-        self.city = data[3]
-        self.state = data[4]
-        self.zip = data[5]
+
+    def __init__(self, column_titles, data_values):
+        # name_raw = data[1].split(' ')
+        # name_join  = ''
+
+        # Setup employee data fields
+        self.data = {} # Stores all CSV related data
+        column_title_count = len(column_titles)
+        for i in range(column_title_count):
+            column_title = column_titles[i]
+            data_value = data_values[i]
+
+            self.data[column_title] = data_value
+
+        name_components = data_values[column_titles.index("Name")].split(" ")
+        self.data["FirstName"] = name_components[0]
+        self.data["LastName"] = name_components[1]
+
+        # Setup employee fields
         self.classification = None
-        self.paymethod = data[6]
-        self.salary = data[8]
-        self.commission = data[9]
-        self.hourly = data[10]
-        self.route = data[11]
-        self.account = data[12]
-        self.password = data[13]
-        self.start_date = data[14]
-        self.privilege = data[15]
-        self.department = data[16]
-        self.email = data[17]
-        self.phone = data[18]
-        self.title = data[19]
+        self.set_classification(self, self.data["ClassificationId"])
+
+        # self.id = data[0]
+        # self.last_name = name_raw.pop()
+        # self.first_name = name_join.join(name_raw)
+        # self.address = data[2]
+        # self.city = data[3]
+        # self.state = data[4]
+        # self.zip = data[5]
+        # self.classification = None
+        # self.paymethod = data[6]
+        # self.salary = data[8]
+        # self.commission = data[9]
+        # self.hourly = data[10]
+        # self.route = data[11]
+        # self.account = data[12]
+        # self.password = data[13]
+        # self.start_date = data[14]
+        # self.privilege = data[15]
+        # self.department = data[16]
+        # self.email = data[17]
+        # self.phone = data[18]
+        # self.title = data[19]
         
         self.quick_attribute = {
         #use as a reference for which attribute corrosponds to which number
-            'ID': self.id,
-            'First name': self.first_name,
-            'Last name': self.last_name,
-            'Address': self.address,
-            'City': self.city,
-            'State': self.state,
-            'Zip': self.zip,
+            'ID': self.data["ID"],
+            'First name': self.data["FirstName"],
+            'Last name': self.data["LastName"],
+            'Address': self.data["Address"],
+            'City': self.data["City"],
+            'State': self.data["State"],
+            'Zip': self.data["Zip"],
             'Classification': str(self.classification),
-            'PayMethod': self.paymethod,
-            'Route': self.route,
-            'Account': self.account,
-            'Start Date': self.start_date,
-            'Privilege': self.privilege,
-            'Department': self.department,
-            'Email': self.email,
-            'Phone': self.phone,
-            'Title': self.title
+            'PayMethod': self.data["PayMethod"],
+            'Route': self.data["Route"],
+            'Account': self.data["Account"],
+            'Start Date': self.data["StartDate"],
+            'Privilege': self.data["Privilege"],
+            'Department': self.data["Department"],
+            'Email': self.data["Email"],
+            'Phone': self.data["Phone"],
+            'JobTitle': self.data["JobTitle"],
 
         }
         self.pay_type_dict = {
-            "Salary": self.salary,
-            "Hourly": self.hourly,
-            "Commission": self.commission
+            "Salary": self.data["Salary"],
+            "Hourly": self.data["Hourly"],
+            "Commission": self.data["Commission"]
         }
         self.editable_by_user = {
         #use as a reference for which attribute corrosponds to which number
-            'First name': self.first_name,
-            'Last name': self.last_name,
-            'Address': self.address,
-            'City': self.city,
-            'State': self.state,
-            'Zip': self.zip,
-            'Route': self.route,
-            'Account': self.account,
-            'Email': self.email,
-            'Phone': self.phone,
-            'Title': self.title
+            'First name': self.data["FirstName"],
+            'Last name': self.data["LastName"],
+            'Address': self.data["Address"],
+            'City': self.data["City"],
+            'State': self.data["State"],
+            'Zip': self.data["Zip"],
+            'Route': self.data["Route"],
+            'Account': self.data["Account"],
+            'Email': self.data["Email"],
+            'Phone': self.data["Phone"],
+            'JobTitle': self.data["JobTitle"]
         }
         
         self.general = ["ID", "First name", "Last name", 'Title', 'Start Date', 'Email', 'Phone', 'Department']
@@ -80,31 +99,31 @@ class Employee:
         #put any information you want to be public in the employee dictionary
         self.privilege_access = {
             "administrator": self.quick_attribute,
-            "employee": {'First name': self.first_name, 'Last name': self.last_name, 'Email': self.email, 'Phone': self.phone, 'Title': self.title}
+            "employee": {'First name': self.data["FirstName"], 'Last name': self.data["LastName"], 'Email': self.data["Email"], 'Phone': self.data["Phone"], 'JobTitle': self.data["JobTitle"]}
         }
         
-        self.set_classification(self, data[7])
+        
 
     @staticmethod
     def set_classification(self, classification, salary = -1, commission = -1, hourly = -1):
         #sets the classification of the employee to the given classification class
         if salary == -1:
-            salary = self.salary
+            salary = self.data["Salary"]
         if commission == -1:
-            commission = self.commission
+            commission = self.data["Commission"]
         if hourly == -1:
-            hourly = self.hourly
+            hourly = self.data["Hourly"]
         if classification == '1':
             self.classification = Salaried(salary)
         elif classification == '2':
             self.classification = Commissioned(salary, commission)
         elif classification == '3':
             self.classification = Hourly(hourly)
-        self.quick_attribute['Classification'] = str(self.classification)
+        # self.quick_attribute['Classification'] = str(self.classification)
 
     def issue_payment(self):
         payment = self.classification.compute_payment()
-        return (f"Mailing {payment} to {self.first_name} {self.last_name} at {self.address} {self.city} {self.state} {self.zip}\n")
+        return (f"Mailing {payment} to {self.FirstName} {self.LastName} at {self.Address} {self.City} {self.State} {self.Zip}\n")
 
     def match_search(self, value, attribute):
         #checks to see if the employee has the given value for the given attribute

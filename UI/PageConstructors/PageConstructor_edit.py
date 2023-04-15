@@ -20,8 +20,8 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
     header_frame = ttk.Frame(top_frame, height=30)
 
     employee = udi.get_target_employee()
-    print(employee.first_name)
-    emp_title = ttk.Label(header_frame, text=employee.first_name + " " + employee.last_name, style="Indent.TLabel")
+    print(employee.data["FirstName"])
+    emp_title = ttk.Label(header_frame, text=employee.data["FirstName"] + " " + employee.data["LastName"], style="Indent.TLabel")
     pay_report_btn = ttk.Button(header_frame, text="Generate Pay Report")
     csv_btn = ttk.Button(header_frame, text="Export CSV")
 

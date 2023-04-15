@@ -21,7 +21,7 @@ class UIDataInterface:
                 user_id: The current user's employee ID
         """
         # Return the login user's ID
-        return Payroll.USER.id
+        return Payroll.USER.data["ID"]
     
     def get_access_level(self) -> str:
         """Return the current user's access level
@@ -30,7 +30,7 @@ class UIDataInterface:
             access_level: The user's access level
         """
         # Request the current user's access level from the backend
-        access_level = Payroll.USER.privilege
+        access_level = Payroll.USER.data["Privilege"]
         # Return access level
         return access_level
 
@@ -71,7 +71,7 @@ class UIDataInterface:
             user_id = Payroll.get_id(employees, user)
 
             #user the id to get the employees password and check it against the users input
-            if password == employees[user_id].password:
+            if password == employees[user_id].data["Password"]:
                 print("PASSWORD MATCH")
                 Payroll.USER = employees[user_id] 
                 #if all the information matches return True  
@@ -123,12 +123,12 @@ class UIDataInterface:
         """
         #check if the user is viewing themself
         target_dictionary = {}
-        if Payroll.USER.id == employee.id:
+        if Payroll.USER.data["ID"] == employee.data["ID"]:
             target_dictionary = employee.editable_by_user
             #Decide what to display based on the privilege level
         else:
             #set the target_dictionary to whatever dictionary is associated with the users privilege level via the privilege_access dictionary
-            target_dictionary = employee.privilege_access[Payroll.USER.privilege]
+            target_dictionary = employee.privilege_access[Payroll.USER.data["Privilege"]]
         return target_dictionary
     
     def set_target_employee(self, employee) -> bool:
@@ -226,8 +226,8 @@ class UIDataInterface:
                 success: Whether the change was successful
         """
         hashed_pass = Payroll.hash_password(password)
-        Payroll.USER.password = hashed_pass
-        row = Payroll.get_row(Payroll.EMPLOYEES.employees, Payroll.USER.first_name)
+        Payroll.USER.data["Password"] = hashed_pass
+        row = Payroll.get_row(Payroll.EMPLOYEES.employees, Payroll.USER.data["FirstName"])
         print("saving password: " + str(row))
         Payroll.set_data(row, 13, hashed_pass)
         return True

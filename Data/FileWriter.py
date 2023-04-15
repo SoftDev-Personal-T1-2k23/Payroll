@@ -5,7 +5,7 @@ class FileWriter():
     
     @staticmethod
     def write_csv(file_path:str, csv_data:CSVData):
-        """Write all CSVData to a file
+        """Write all CSV data to a file
 
             Params:
                 file_path: The CSV file path
