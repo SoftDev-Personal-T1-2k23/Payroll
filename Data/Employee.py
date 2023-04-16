@@ -5,6 +5,27 @@ import pandas as pd
 import Data.Payroll as Payroll
 from Data.FileConstants import DIR_ROOT
 
+DATA_ACCESS_VIEW = {
+    "public": [
+        "FirstName", "LastName", "JobTitle", "ID", "StartDate", "Department"
+    ],
+    "private": [
+        "Address", "City", "State", "Zip", "Route", "Account", "Email", "Phone", "ClassificationId", "Salary", "PayMethod",
+        "Commission", "Route", "Account", "Privilege"
+    ],
+    "admin": []
+}
+DATA_ACCESS_MODIFY = {
+    "public": [],
+    "private": [
+        "Address", "City", "State", "Zip", "Route", "Account", "Email", "Phone", "ClassificationId", "Salary", "PayMethod",
+        "Commission", "Route", "Account"
+    ],
+    "admin": [
+        "FirstName", "LastName", "ID", "JobTitle", "StartDate", "Department", "Privilege"
+    ]
+}
+
 class Employee:
     #Employee object contain their name, id, payment info, classification info, and adress
 
@@ -77,30 +98,30 @@ class Employee:
             "Hourly": self.data["Hourly"],
             "Commission": self.data["Commission"]
         }
-        self.editable_by_user = {
-        #use as a reference for which attribute corrosponds to which number
-            'First name': self.data["FirstName"],
-            'Last name': self.data["LastName"],
-            'Address': self.data["Address"],
-            'City': self.data["City"],
-            'State': self.data["State"],
-            'Zip': self.data["Zip"],
-            'Route': self.data["Route"],
-            'Account': self.data["Account"],
-            'Email': self.data["Email"],
-            'Phone': self.data["Phone"],
-            'JobTitle': self.data["JobTitle"]
-        }
+        # self.editable_by_user = {
+        # #use as a reference for which attribute corrosponds to which number
+        #     'First name': self.data["FirstName"],
+        #     'Last name': self.data["LastName"],
+        #     'Address': self.data["Address"],
+        #     'City': self.data["City"],
+        #     'State': self.data["State"],
+        #     'Zip': self.data["Zip"],
+        #     'Route': self.data["Route"],
+        #     'Account': self.data["Account"],
+        #     'Email': self.data["Email"],
+        #     'Phone': self.data["Phone"],
+        #     'JobTitle': self.data["JobTitle"]
+        # }
         
-        self.general = ["ID", "First name", "Last name", 'Title', 'Start Date', 'Email', 'Phone', 'Department']
-        self.personal = ["Address", "City", "State", "Zip", "Classification", "PayMethod", "Salary", "Hourly", "Commission", 'Privilege']
-        self.sensitive = ["Route", "Account"]
+        # self.general = ["ID", "First name", "Last name", 'Title', 'Start Date', 'Email', 'Phone', 'Department']
+        # self.personal = ["Address", "City", "State", "Zip", "Classification", "PayMethod", "Salary", "Hourly", "Commission", 'Privilege']
+        # self.sensitive = ["Route", "Account"]
 
         #put any information you want to be public in the employee dictionary
-        self.privilege_access = {
-            "administrator": self.quick_attribute,
-            "employee": {'First name': self.data["FirstName"], 'Last name': self.data["LastName"], 'Email': self.data["Email"], 'Phone': self.data["Phone"], 'JobTitle': self.data["JobTitle"]}
-        }
+        # self.privilege_access = {
+        #     "administrator": self.quick_attribute,
+        #     "employee": {'First name': self.data["FirstName"], 'Last name': self.data["LastName"], 'Email': self.data["Email"], 'Phone': self.data["Phone"], 'JobTitle': self.data["JobTitle"]}
+        # }
         
         
 
@@ -120,10 +141,29 @@ class Employee:
         elif classification == '3':
             self.classification = Hourly(hourly)
         # self.quick_attribute['Classification'] = str(self.classification)
+    
+    def get_editable_field_data(self):
+        """Return fields the current user has privilege to edit"""
+        # Get accessible fields
+        curr_user = Payroll.USER
+        is_user = curr_user == self.data["ID"]
+        user_privilege = curr_user.data["Privilege"]
+        public_accessible_fields =  DATA_ACCESS_MODIFY["public"] if is_user else None
+        private_accessible_fields =  DATA_ACCESS_MODIFY["private"] if is_user else None
+        admin_accessible_fields =  DATA_ACCESS_MODIFY["admin"] if user_privilege == "administrator" else None
+
+
+        # Gather and return field data
+        field_data = {
+            "public": [(key, self.data[key]) for key in public_accessible_fields] if public_accessible_fields else [],
+            "private": [(key, self.data[key]) for key in private_accessible_fields] if private_accessible_fields else [],
+            "admin": [(key, self.data[key]) for key in admin_accessible_fields] if admin_accessible_fields else []
+        }
+        return field_data
 
     def issue_payment(self):
         payment = self.classification.compute_payment()
-        return (f"Mailing {payment} to {self.FirstName} {self.LastName} at {self.Address} {self.City} {self.State} {self.Zip}\n")
+        return f'Mailing {payment} to {self.data["FirstName"]} {self.data["LastName"]} at {self.data["Address"]} {self.data["City"]} {self.data["State"]} {self.data["Zip"]}\n'
 
     def match_search(self, value, attribute):
         #checks to see if the employee has the given value for the given attribute
@@ -142,29 +182,29 @@ class Employee:
     def update(self, File):
         #updates all self values to reflect the quick_attribute template
         #also write the updated values to the employees CSV file
-        self.id = self.quick_attribute['ID']
-        self.last_name = self.quick_attribute['last_name']
-        self.first_name = self.quick_attribute['first_name']
-        self.address = self.quick_attribute['Address']
-        self.city = self.quick_attribute['City']
-        self.state = self.quick_attribute['State']
-        self.zip = self.quick_attribute['Zip']
+        self.data["ID"] = self.quick_attribute['ID']
+        self.data["LastName"] = self.quick_attribute['last_name']
+        self.data["FirstName"] = self.quick_attribute['first_name']
+        self.data["Address"] = self.quick_attribute['Address']
+        self.data["City"] = self.quick_attribute['City']
+        self.data["State"] = self.quick_attribute['State']
+        self.data["Zip"] = self.quick_attribute['Zip']
         if str(self.classification) != self.quick_attribute['Classification']:
             self.set_classification(self.quick_attribute['Classification'])
             if str(self.classification) == '2':
                 Payroll.process_receipts()
-            elif str(self.Classification) == '3':
+            elif str(self.classification) == '3':
                 Payroll.process_timecards()
-        self.paymethod = self.quick_attribute['PayMethod']
-        self.salary = self.quick_attribute['Salary']
-        self.commission = self.quick_attribute['Commission']
-        self.hourly = self.quick_attribute['Hourly']
-        self.route = self.quick_attribute['Route']
-        self.account = self.quick_attribute['Account']
+        self.data["PayMethod"] = self.quick_attribute['PayMethod']
+        self.data["Salary"] = self.quick_attribute['Salary']
+        self.data["Commission"] = self.quick_attribute['Commission']
+        self.data["Hourly"] = self.quick_attribute['Hourly']
+        self.data["Route"] = self.quick_attribute['Route']
+        self.data["Account"] = self.quick_attribute['Account']
 
         line_num = 0
         for i in Payroll.EMPLOYEES.employees:
-            if i == self.id:
+            if i == self.data["ID"]:
                 break
             line_num += 1
         file = pd.read_csv(DIR_ROOT + "\\" + File)
@@ -172,16 +212,16 @@ class Employee:
             if i != 'last_name' and i != 'first_name':
                 file.loc[line_num, i] = self.quick_attribute[i]
             elif i == 'last_name':
-                file.loc[line_num, 'Name'] = self.first_name + ' ' + self.last_name
+                file.loc[line_num, 'Name'] = self.data["FirstName"] + ' ' + self.data["LastName"]
         file.to_csv(DIR_ROOT + "\\employees.csv", index=False)
 
 
 
     def __str__(self):
         printer = ''
-        printer += str(self.id) + ' : '
-        printer += self.last_name + ' ' + self.first_name + ', '
-        printer += self.address + ', ' + self.city + ' ' + self.state + ' ' + self.zip
+        printer += str(self.data["ID"]) + ' : '
+        printer += self.data["LastName"] + ' ' + self.data["FirstName"] + ', '
+        printer += self.data["Address"] + ', ' + self.data["City"] + ' ' + self.data["State"] + ' ' + self.data["Zip"]
         printer += '\n'
         return printer
 

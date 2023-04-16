@@ -18,7 +18,7 @@ class CSVData:
         return self.rows
 
     def get_column_index(self, column_title:str) ->int:
-        """Return a columns index from a column title"""
+        """Return a column's index from a column title"""
         return self.columns.index(column_title)
 
     def get_row_value(self, row:list, column_title:str):

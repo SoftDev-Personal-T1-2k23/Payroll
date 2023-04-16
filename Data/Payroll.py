@@ -131,8 +131,8 @@ def find_employee(employees, user):
 # make a dictionary mapping field names to column locations in the csv file
 EMPLOYEE_ENTRY_LOOKUP = {
     'ID': 0,
-    'Last name': 1,
-    'First name': 1,
+    'LastName': 1,
+    'FirstName': 1,
     'Address': 2,
     'City': 3,
     'State': 4,
@@ -152,25 +152,61 @@ EMPLOYEE_ENTRY_LOOKUP = {
     'Phone': 18,
     'JobTitle': 19
 }
-def save_info(entry_dict):
+def save_info(field_data):
     '''
     takes a dictionary of entry objects as a parameter
     the dictionary contains field names and the associated entry for that field. 
     '''
-    # # Get the information from the fields and save it to a file or database
-    df = pd.read_csv('employees.csv')
-    for field_name in entry_dict:
-        #skip the last name since that is combined with the first
-        if field_name == 'Last name':
+    # Get CSV data & Locate the target employee
+    csv_data = FileReader.read_csv(PATH_EMPLOYEE_DATA)
+    csv_row = None
+    col_index = csv_data.get_column_index("ID") # It's zero, but this is prob safer
+    for row in csv_data.rows:
+        if row[col_index] == TARGET_EMPLOYEE.data["ID"]:
+            csv_row = row
+    # Return if the target employee does not exist
+    if not csv_row:
+        print("Error: Failed to save employee info; employee not found")
+        return
+
+    # Update the target_employee & CSV data
+    for pair in field_data:
+        field_key = pair[0]
+        field_val = pair[1]
+        
+        # Exceptions
+        if field_key == "FirstName":
+            row[1] = field_val
+            TARGET_EMPLOYEE.data["FirstName"] = field_val
             continue
-        entry = entry_dict[field_name]
-        row = get_row(EMPLOYEES.employees, TARGET_EMPLOYEE.data["FirstName"])
-        col = EMPLOYEE_ENTRY_LOOKUP[field_name]
-        #handle for unique case of first and last name bieng combined in one spot
-        if field_name == "First name":
-            df.iloc[row, col] = entry_dict['First name'].get() + " " + entry_dict['Last name'].get()
-        else:
-            df.iloc[row, col] = entry.get()
+        elif field_key == "LastName":
+            row[1] += f" {field_val}"
+            TARGET_EMPLOYEE.data["LastName"] = field_val
+            continue
+        
+        # Update values
+        col_index = csv_data.get_column_index(field_key)
+        row[col_index] = field_val
+        TARGET_EMPLOYEE.data[field_key] = field_val
+
+    
+    # Set values in CSV file
+    FileWriter.write_csv(PATH_EMPLOYEE_DATA, csv_data)
+
+    # # Get the information from the fields and save it to a file or database
+    # df = pd.read_csv('employees.csv')
+    # for field_name in entry_dict:
+    #     #skip the last name since that is combined with the first
+    #     if field_name == 'Last name':
+    #         continue
+    #     entry = entry_dict[field_name]
+    #     row = get_row(EMPLOYEES.employees, TARGET_EMPLOYEE.data["FirstName"])
+    #     col = EMPLOYEE_ENTRY_LOOKUP[field_name]
+    #     #handle for unique case of first and last name bieng combined in one spot
+    #     if field_name == "First name":
+    #         df.iloc[row, col] = entry_dict['First name'].get() + " " + entry_dict['Last name'].get()
+    #     else:
+    #         df.iloc[row, col] = entry.get()
 
     # # first_name = entry_list[0].get()
     # # last_name = entry_list[1].get()
@@ -191,7 +227,7 @@ def save_info(entry_dict):
     # # df.iloc[row, 5] = zip_code
     # # df.iloc[row, 11] = route
     # # df.iloc[row, 12] = account
-    df.to_csv('employees.csv', index=False)
+    # df.to_csv('employees.csv', index=False)
 
 
 

@@ -112,24 +112,6 @@ class UIDataInterface:
         """
         # Return the target employee
         return Payroll.TARGET_EMPLOYEE
-
-    def get_target_employee_information(self, employee):
-        """Return the current target employee's information
-
-            Params:
-                employee: The employee to get information about
-            Returns:
-                target_employee: The current target employee's information
-        """
-        #check if the user is viewing themself
-        target_dictionary = {}
-        if Payroll.USER.data["ID"] == employee.data["ID"]:
-            target_dictionary = employee.editable_by_user
-            #Decide what to display based on the privilege level
-        else:
-            #set the target_dictionary to whatever dictionary is associated with the users privilege level via the privilege_access dictionary
-            target_dictionary = employee.privilege_access[Payroll.USER.data["Privilege"]]
-        return target_dictionary
     
     def set_target_employee(self, employee) -> bool:
         """Sets the payroll's target employee

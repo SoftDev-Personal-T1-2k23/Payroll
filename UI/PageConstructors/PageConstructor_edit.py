@@ -40,32 +40,42 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
     # Populate the three panels with the relevant stored information (text labels)
     
     #decide what dictionary of information the user should have access to
-    target_dictionary = udi.get_target_employee_information(employee)
+    emp_field_data = employee.get_editable_field_data()
+    #TODO: Improve security ^^^^^^^^^^^^^^^^^^^^
 
     # get the user fields and create entries and store them in a list
     entry_dict = {}
 
     target_row = 0
-    for field_name in target_dictionary:
-        field_value = target_dictionary[field_name]
+    for (priv_group_key, priv_group_data) in emp_field_data.items():
         frame = None
         #decide which frame the information belongs in based on the categorized lists
-        if field_name in employee.general:
+        if priv_group_key == "public":
             frame = public_frame
-        elif field_name in employee.personal:
+        elif priv_group_key == "private":
             frame = private_frame
-        else:
+        elif priv_group_key == "admin":
             frame = admin_frame
+        # if field_name in employee.general:
+        #     frame = public_frame
+        # elif field_name in employee.personal:
+        #     frame = private_frame
+        # else:
+        #     frame = admin_frame
 
-        temp_label = ttk.Label(frame, text=field_name)
-        temp_label.grid(column=0, row=target_row, padx=5, pady=5)
-        
-        temp_entry = ttk.Entry(frame)
-        temp_entry.insert(0, field_value)
-        temp_entry.grid(column=1, row=target_row, padx=5, pady=5)
-        
-        entry_dict[field_name] = temp_entry
-        target_row += 1
+        for field_data in priv_group_data:
+            field_name = field_data[0]
+            field_value = field_data[1]
+
+            temp_label = ttk.Label(frame, text=field_name)
+            temp_label.grid(column=0, row=target_row, padx=5, pady=5)
+            
+            temp_entry = ttk.Entry(frame)
+            temp_entry.insert(0, field_value)
+            temp_entry.grid(column=1, row=target_row, padx=5, pady=5)
+            
+            entry_dict[field_name] = temp_entry
+            target_row += 1
 
 
     #Create change password button
@@ -73,7 +83,7 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
 
     change_btn.grid(column=1, row=target_row, padx=5, pady=5)
     # Create Save button
-    save_btn = ttk.Button(middle_frame, text="Save", command=lambda: udi.update_employee_info(entry_dict))
+    save_btn = ttk.Button(middle_frame, text="Save", command=lambda: udi.update_employee_info([(pair[0], pair[1].get()) for pair in entry_dict.items()]))
     # save_button.grid(column=1, row=2, padx=5, pady=5)
 
     # Validate shown fields, if changed
