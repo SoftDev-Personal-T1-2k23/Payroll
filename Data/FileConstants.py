@@ -9,3 +9,6 @@ file_path = DIR_ROOT + "\\" + "employees.csv"
 if not(os.path.isfile(file_path)):
     # print("using cwd")
     DIR_ROOT = os.getcwd()
+
+PATH_PAYLOG = os.path.join(DIR_ROOT, "paylog.txt")
+PATH_EMPLOYEE_DATA = os.path.join(DIR_ROOT, "employees.csv")

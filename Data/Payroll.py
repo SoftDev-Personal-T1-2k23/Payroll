@@ -1,74 +1,13 @@
-"""
-Tyler Anderson
-5/2/22
-CS1410-004
-This function will take a number of text files and be able to issue pay to a number of employees. Each employee will
-have their own object that contains all of their relevant information. Their pay will be calculated on whether they are
-salaried, commissioned, or hourly and be output to a text file.
-"""
+"""A file containing program state and utility functions"""
 import os
-import csv
 import hashlib
-import pandas as pd
-from Data.FileConstants import DIR_ROOT
-from Data.Employee import Employee
+from Data.FileConstants import DIR_ROOT, PATH_EMPLOYEE_DATA
 from Data.FileReader import FileReader
 from Data.FileWriter import FileWriter
+from Data.Database import Database
 
-PATH_PAYLOG = os.path.join(DIR_ROOT, "paylog.txt")
-PATH_EMPLOYEE_DATA = os.path.join(DIR_ROOT, "employees.csv")
-
-EMPLOYEES = None
 USER = None
 TARGET_EMPLOYEE = None #this is to keep track of what the view and edit pages should display
-
-class Database:
-    #contains a dictionary of all employees with their id as a key, as well as expedient methods
-    def __init__(self):
-        emp_csv_data = FileReader.read_csv(PATH_EMPLOYEE_DATA)
-
-        self.employee_csv_data = emp_csv_data
-        self.employees = {}
-
-        # Create employees
-        for row in emp_csv_data.rows:
-            employee = Employee(emp_csv_data.columns, row)
-            self.add_employee(employee)
-
-    def add_employee(self, employee):
-        #takes an employee object and adds it to the employees dictionary
-        self.employees[employee.data["ID"]] = employee
-
-    def change_employee(self, id, change_list, file = "employees.csv"):
-        #takes an id and attributes to change, stored in a list of tuples, then changes the values of said atributes for the target employee
-        #tuples are comprised of the quick_atribute reference to the target attribute, then the value it will be changed to
-        #this will change the csv document as well
-        employee = self.find_employee(id)
-        for i in change_list:
-            employee.change(i[0], i[1])
-        employee.update(file)
-
-    def find_employee(self, value, attribute = 'ID'):
-        #takes an attribute to search by, then returns all employees who match the given value
-        #defaults to a search by id
-        if attribute == 'ID':
-            try:
-                return self.employees[int(value)]
-            except:
-                raise ValueError('there is no employee with id number: ' +  str(value))
-        matches = []
-        for i in self.employees:
-            if self.employees[i].match_search(value, attribute):
-                matches.append(self.employees[i])
-        return matches
-
-    def __str__(self):
-        #prints the IDs of every employee in the database
-        printer = ""
-        for i in self.employees:
-            printer += str(self.employees[i])
-        return printer
-
 
 def hash_password(password):
     # Encode the password string as UTF-8 bytes
@@ -129,29 +68,29 @@ def find_employee(employees, user):
     return False
 
 # make a dictionary mapping field names to column locations in the csv file
-EMPLOYEE_ENTRY_LOOKUP = {
-    'ID': 0,
-    'LastName': 1,
-    'FirstName': 1,
-    'Address': 2,
-    'City': 3,
-    'State': 4,
-    'Zip': 5,
-    'Classification': 6,
-    'PayMethod': 7,
-    'Salary': 8,
-    'Hourly': 9,
-    'Commission': 10,
-    'Route': 11,
-    'Account': 12,
-    'Password': 13,
-    'Start Date': 14,
-    'Privilege': 15,
-    'Department': 16,
-    'Email': 17,
-    'Phone': 18,
-    'JobTitle': 19
-}
+# EMPLOYEE_ENTRY_LOOKUP = {
+#     'ID': 0,
+#     'LastName': 1,
+#     'FirstName': 1,
+#     'Address': 2,
+#     'City': 3,
+#     'State': 4,
+#     'Zip': 5,
+#     'Classification': 6,
+#     'PayMethod': 7,
+#     'Salary': 8,
+#     'Hourly': 9,
+#     'Commission': 10,
+#     'Route': 11,
+#     'Account': 12,
+#     'Password': 13,
+#     'Start Date': 14,
+#     'Privilege': 15,
+#     'Department': 16,
+#     'Email': 17,
+#     'Phone': 18,
+#     'JobTitle': 19
+# }
 def save_info(field_data):
     '''
     takes a dictionary of entry objects as a parameter
@@ -248,10 +187,11 @@ def get_row(employees, user):
         target_row += 1
     return None
 
-def set_data(row, col, data):
-    df = pd.read_csv('employees.csv')
-    df.iloc[row, col] = data
-    df.to_csv('employees.csv', index=False)
+# not used anywhere in the code
+# def set_data(row, col, data):
+#     df = pd.read_csv('employees.csv')
+#     df.iloc[row, col] = data
+#     df.to_csv('employees.csv', index=False)
 
 
 def load_database():
@@ -262,7 +202,6 @@ def load_database():
 
 def load_employees(data = 'employees.csv'):
     #reads all employees in from the indicated csv file. Defaults employees.csv
-
     raw = []
     global EMPLOYEES
     with open(DIR_ROOT + "\\" + data, 'r') as file:

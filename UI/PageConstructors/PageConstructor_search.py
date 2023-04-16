@@ -121,16 +121,13 @@ def search(data, results_frame, ui_core):
     #end the function if there is nothing to search
     if data.get() == "":
         return None
-
+    
     #loop through the dictionary of employees
     for id in employees:
         #get the individual employee object
         person = employees[id]
         #loop through the persons attributes
-        for field_name in person.quick_attribute:
-            #get the actual attribute value
-            field_value = person.quick_attribute[field_name]
-
+        for (field_name, field_value) in person.data.items():
             #if the users query appears in the field we are looking at add the employee to the list
             if data.get() in str(field_value):
                 display_list.append(person)

@@ -11,6 +11,8 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
 
     user_id = udi.get_user_id()
     user_access_level = udi.get_access_level()
+    employee = udi.get_target_employee()
+    target_employee_data = employee.get_viewable_field_data()
 
     # Split the page into necessary panels
     base_frame = ttk.Frame(ui_core.root, padding=15)
@@ -22,8 +24,6 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
     header_frame = ttk.Frame(top_frame, height=30)
 
     #get the user object saved in the payroll file 
-    employee = udi.get_target_employee()
-
     emp_title = ttk.Label(header_frame, text= employee.data["FirstName"] + " " + employee.data["LastName"] , style="Indent.TLabel")
     pay_report_btn = ttk.Button(header_frame, text="Generate Pay Report")
     csv_btn = ttk.Button(header_frame, text="Export CSV")
@@ -40,69 +40,88 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
     bottom_frame = ttk.Frame(base_frame, height=50)
     back_btn = ttk.Button(bottom_frame, text="Back", command=ui_core.page_controller.open_prev_page)
 
-    # Populate the three panels with the relevant stored information (text labels)
 
-    #decide what dictionary of information the user should have access to
-    target_dictionary = {}
-    #check if the user is viewing themself
-    if user_id == employee.data["ID"]:
-        target_dictionary = employee.quick_attribute
-    #Decide what to display based on the privilege level
-    else:
-        #set the target_dictionary to whatever dictionary is associated with the users privilege level via the privilege_access dictionary
-        target_dictionary = employee.privilege_access[user_access_level]
-    # print(target_dictionary)
+    # target_row = 0
+    # for (priv_group_key, priv_group_data) in emp_field_data.items():
+    #     frame = None
 
-    target_row = 0
-    for field_name in target_dictionary:
-        field_value = target_dictionary[field_name]
-        frame = None
-        #decide which frame the information belongs in based on the categorized lists
-        if field_name in employee.general:
-            frame = public_frame
-        elif field_name in employee.personal:
-            frame = private_frame
-        else:
+    #     #decide which frame the information belongs in based on the categorized lists
+    #     if priv_group_key == "public":
+    #         frame = public_frame
+    #     elif priv_group_key == "private":
+    #         frame = private_frame
+    #     elif priv_group_key == "admin":
+    #         frame = admin_frame
+
+    #     for field_data in priv_group_data:
+    #         field_name = field_data[0]
+    #         field_value = field_data[1]
+
+    #         temp_label = ttk.Label(frame, text=field_name)
+    #         temp_label.grid(column=0, row=target_row, padx=5, pady=5)
             
+    #         temp_entry = ttk.Entry(frame)
+    #         temp_entry.insert(0, field_value)
+    #         temp_entry.grid(column=1, row=target_row, padx=5, pady=5)
+            
+    #         entry_dict[field_name] = temp_entry
+    #         target_row += 1
+
+
+    # Populate the three panels with the relevant stored information (text labels)
+    target_row = 0
+    for (priv_group_key, priv_group_data) in target_employee_data.items():
+        frame = None
+
+        #decide which frame the information belongs in based on the categorized lists
+        if priv_group_key == "public":
+            frame = public_frame
+        elif priv_group_key == "private":
+            frame = private_frame
+        elif priv_group_key == "admin":
             frame = admin_frame
 
-        #handle classification and pay
-        if field_name == "Classification":
-            classification = employee.classification.type()
-            # print(classification)
+        for field_data in priv_group_data:
+            field_name = field_data[0]
+            field_value = field_data[1]
 
-            #create the label for classification 
-            temp_label = ttk.Label(frame, text="Classification")
-            #position the label using the grid
-            temp_label.grid(column=0, row=target_row, padx=5, pady=5)
-            #make the labels that hold the information
-            value_label = ttk.Label(frame, text=classification)
-            #position the label using the grid
-            value_label.grid(column=1, row=target_row, padx=5, pady=5)
+            #handle classification and pay
+            if field_name == "Classification":
+                classification = employee.classification.type()
+                # print(classification)
+
+                #create the label for classification 
+                temp_label = ttk.Label(frame, text="Classification")
+                #position the label using the grid
+                temp_label.grid(column=0, row=target_row, padx=5, pady=5)
+                #make the labels that hold the information
+                value_label = ttk.Label(frame, text=classification)
+                #position the label using the grid
+                value_label.grid(column=1, row=target_row, padx=5, pady=5)
+                target_row += 1
+
+                #create the label for amount
+                #create the descriptive labels
+                temp_label = ttk.Label(frame, text="Amount")
+                #position the label using the grid
+                temp_label.grid(column=0, row=target_row, padx=5, pady=5)
+                #make the labels that hold the information
+                value_label = ttk.Label(frame, text=employee.pay_type_dict[classification])
+                #position the label using the grid
+                value_label.grid(column=1, row=target_row, padx=5, pady=5)
+
+            #handle all other general info
+            else:
+                #create the descriptive labels
+                temp_label = ttk.Label(frame, text=field_name)
+                #position the label using the grid
+                temp_label.grid(column=0, row=target_row, padx=5, pady=5)
+                #make the labels that hold the information
+                value_label = ttk.Label(frame, text=field_value)
+                #position the label using the grid
+                value_label.grid(column=1, row=target_row, padx=5, pady=5)
+
             target_row += 1
-
-            #create the label for amount
-            #create the descriptive labels
-            temp_label = ttk.Label(frame, text="Amount")
-            #position the label using the grid
-            temp_label.grid(column=0, row=target_row, padx=5, pady=5)
-            #make the labels that hold the information
-            value_label = ttk.Label(frame, text=employee.pay_type_dict[classification])
-            #position the label using the grid
-            value_label.grid(column=1, row=target_row, padx=5, pady=5)
-
-        #handle all other general info
-        else:
-            #create the descriptive labels
-            temp_label = ttk.Label(frame, text=field_name)
-            #position the label using the grid
-            temp_label.grid(column=0, row=target_row, padx=5, pady=5)
-            #make the labels that hold the information
-            value_label = ttk.Label(frame, text=field_value)
-            #position the label using the grid
-            value_label.grid(column=1, row=target_row, padx=5, pady=5)
-
-        target_row += 1
 
 
     base_frame.pack(side=TOP, fill=BOTH, expand=TRUE)
