@@ -26,7 +26,8 @@ def initialize_passwords():
     this function is for creating the hashed passwords based on the user id if the password has not yet been initialized
     '''
     # Read the CSV file
-    csv_data = FileReader.read_csv('employees.csv')
+    print(PATH_EMPLOYEE_DATA)
+    csv_data = FileReader.read_csv(PATH_EMPLOYEE_DATA)
     # Check for null passwords & Add new ones if necessary
     for row in csv_data.rows:
         # Check if current pass exists
@@ -38,7 +39,7 @@ def initialize_passwords():
             # Set new password
             csv_data.set_row_value(row, "Password", new_pass)
     # Update CSV file contents
-    FileWriter.write_csv('employees.csv', csv_data)
+    FileWriter.write_csv(PATH_EMPLOYEE_DATA, csv_data)
 
     #first figure out how many employees there are
     # with open('employees.csv', mode='r') as file:
@@ -200,7 +201,7 @@ def load_database():
     global EMPLOYEES
     EMPLOYEES = Database()
 
-def load_employees(data = 'employees.csv'):
+def load_employees(data = PATH_EMPLOYEE_DATA):
     #reads all employees in from the indicated csv file. Defaults employees.csv
     raw = []
     global EMPLOYEES
