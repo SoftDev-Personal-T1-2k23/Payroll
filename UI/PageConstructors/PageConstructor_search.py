@@ -27,7 +27,7 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
 
     # Add a search entry and search button
     search_frame = ttk.Frame(top_frame, height=30)
-    search_btn = ttk.Button(search_frame, text="Search", command=lambda: search(search_entry_var, results_frame, ui_core))
+    search_btn = ttk.Button(search_frame, text="Search", command=lambda: search(search_entry_var, results_frame, results_scroll, ui_core))
     search_entry = ttk.Entry(search_frame, width=50, textvariable=search_entry_var)
 
     # Add search filter options
@@ -64,15 +64,15 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
     filter1_menu.config(width=longest_option_width)
 
     middle_frame = ttk.Frame(base_frame)
-    results_frame = ttk.Frame(middle_frame, width=400, height=300, style="Indent.TFrame")
+    results_frame = ttk.Frame(middle_frame, width=400, height=400, style="Indent.TFrame")
+    results_frame.pack_propagate(False)
+    results_scroll = ttk.Scrollbar(results_frame)
 
-   
 
     # Add a "to home" button (-> home page) & other "ease of use" buttons
     bottom_frame = ttk.Frame(base_frame, height=50)
     # back_btn = ttk.Button(bottom_frame, text="Back", command=ui_core.page_controller.open_prev_page)
     back_btn = ttk.Button(bottom_frame, text="Back", command=lambda: ui_core.page_controller.open_page("home"))
-
 
 
     base_frame.pack(side=TOP, fill=BOTH, expand=TRUE)
@@ -96,12 +96,13 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
 
     middle_frame.pack(side=TOP, expand=TRUE, fill=BOTH)
     results_frame.pack(side=TOP, expand=TRUE, pady=(10,0))
+    results_scroll.pack(side=RIGHT, fill=Y)
 
     bottom_frame.pack(side=LEFT)
     back_btn.pack(side=LEFT)
 
 
-def search(data, results_frame, ui_core):
+def search(data, results_frame, results_scroll, ui_core):
     '''
     This function is called when the search button is pressed
     it takes the input from the search entry box as a parameter
@@ -113,7 +114,7 @@ def search(data, results_frame, ui_core):
     employees = udi.get_employees()
 
     #reset the display_list and clear the frame
-    display_list = []
+    emp_list = []
     for child in results_frame.winfo_children():
         child.destroy()
 
@@ -128,25 +129,33 @@ def search(data, results_frame, ui_core):
     #loop through the dictionary of employees
     for id in employees:
         #get the individual employee object
-        person = employees[id]
+        emp = employees[id]
         #loop through the persons attributes
-        for (field_name, field_value) in person.data.items():
+        for (field_name, field_value) in emp.data.items():
             if field_name in IGNORED_FIELDS: continue
 
             #if the users query appears in the field we are looking at add the employee to the list
             if data.get() in str(field_value):
-                display_list.append(person)
+                if emp in emp_list: continue
+                emp_list.append(emp)
 
+    def open_employee_view_page(emp):
+        udi.set_target_employee(emp)
+        ui_core.page_controller.open_page("view")
 
     #make the entries
-    target_row = 0
-    for person in display_list:
-        label = ttk.Label(results_frame, text=person.data["FirstName"] + " " + person.data["LastName"])
-        label.grid(row=target_row, column=1, padx=10, pady=10)
-        view_btn = ttk.Button(results_frame, text="view", command=lambda i=person: ui_core.page_controller.open_page("view", i))
+    row = 0
+    for emp in emp_list:
+        frame = ttk.Frame(results_frame)
+        frame_emp_name = ttk.Frame(frame, width=50)
+        label_emp_name = ttk.Label(frame_emp_name, text=emp.data["Name"])
+        content_frame = ttk.Frame(frame)
+        btn_view = ttk.Button(content_frame, text="View", command=lambda: open_employee_view_page(emp))
         
-        
+        frame.pack(side=TOP, fill=X, padx=(2,2), pady=(2,2))
+        frame_emp_name.pack(side=LEFT)
+        label_emp_name.pack(padx=(0,10))
+        content_frame.pack(side=LEFT, expand=TRUE, fill=X)
+        btn_view.pack(side=RIGHT)
 
-        view_btn.grid(row=target_row, column=2)
-        target_row += 1
-    results_frame.grid_propagate(False)
+        row += 1

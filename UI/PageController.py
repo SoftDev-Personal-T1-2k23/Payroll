@@ -62,7 +62,7 @@ class PageController:
         self.clear_page()
         self.page.load(self.ui_core, self.ui_core.tooltip_controller, self.cache, self.page_data)
 
-    def open_page(self, page_id:str, employee = None) ->None:
+    def open_page(self, page_id:str) ->None:
 
         """Clear the current page and open the desired page
         
@@ -70,7 +70,7 @@ class PageController:
               page_id: The page's associated page_id to load from
 
         """
-        self.ui_core.ui_data_interface.set_target_employee(employee)
+        # self.ui_core.ui_data_interface.set_target_employee(employee)
 
         # Check if a page exists and clear and store it if it does
         if self.page is not None:

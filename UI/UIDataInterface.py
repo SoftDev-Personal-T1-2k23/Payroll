@@ -111,7 +111,7 @@ class UIDataInterface:
                 target_employee: The current target employee's information
         """
         # Return the target employee
-        return Payroll.TARGET_EMPLOYEE
+        return Payroll.USER if Payroll.TARGET_EMPLOYEE is None else Payroll.TARGET_EMPLOYEE
     
     def set_target_employee(self, employee) -> bool:
         """Sets the payroll's target employee
