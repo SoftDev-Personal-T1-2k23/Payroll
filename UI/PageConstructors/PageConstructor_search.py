@@ -64,7 +64,7 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
     filter1_menu.config(width=longest_option_width)
 
     middle_frame = ttk.Frame(base_frame)
-    results_frame = ttk.Frame(middle_frame, width=400, height=400, style="Indent.TFrame")
+    results_frame = ttk.Frame(middle_frame, width=400, height=300, style="Indent.TFrame")
     results_frame.pack_propagate(False)
     results_scroll = ttk.Scrollbar(results_frame)
 

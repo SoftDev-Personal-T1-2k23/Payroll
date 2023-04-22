@@ -52,9 +52,17 @@ class UICore:
 
         ttk.Style().configure("Indent.TFrame", background="#CCC")
         ttk.Style().configure("Indent.TLabel", background="#CCC")
+
         ttk.Style().configure("Public.TFrame", background="#ACA")
         ttk.Style().configure("Private.TFrame", background="#FEC")
         ttk.Style().configure("Admin.TFrame", background="#FAA")
+        ttk.Style().configure("PublicFieldTitle.TLabel", background="#ACA", font=("Sans", 10, "bold"))
+        ttk.Style().configure("PrivateFieldTitle.TLabel", background="#FEC", font=("Sans", 10, "bold"))
+        ttk.Style().configure("AdminFieldTitle.TLabel", background="#FAA", font=("Sans", 10, "bold"))
+        ttk.Style().configure("PublicField.TLabel", background="#ACA")
+        ttk.Style().configure("PrivateField.TLabel", background="#FEC")
+        ttk.Style().configure("AdminField.TLabel", background="#FAA")
+
         ttk.Style().configure("Red.TFrame", background="#F00")
         ttk.Style().configure("Green.TFrame", background="#0F0")
         ttk.Style().configure("Blue.TFrame", background="#00F")
