@@ -3,7 +3,7 @@
 from tkinter import *
 from tkinter import ttk
 from os import path
-from UI.TooltipController import TooltipController
+from UI.tooltip_controller import TooltipController
 
 def constructor(ui_core, ttc:TooltipController, cache, page_data):
     username_var = StringVar()
@@ -48,12 +48,12 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
         # user_entry.insert(0, "Username")
         # user_entry.bind("<FocusIn>", lambda ev: user_entry.delete(0, "end"))
     
-    ttc.add_tooltip(user_entry, "login_user_entry", (-145, 0), "Username", "Your company username")
+    ttc.add_tooltip(user_entry, "login_user_entry", (-145, 0), ("Username", "Your company username"))
 
     pass_entry = ttk.Entry(entry_frame, show="●", textvariable=password_var)
         # pass_entry.insert(0, "Password")
         # pass_entry.bind("<FocusIn>", lambda ev: pass_entry.delete(0, "end"))
-    ttc.add_tooltip(pass_entry, "login_pass_entry", (-145, 0), "Password", "Your company password")
+    ttc.add_tooltip(pass_entry, "login_pass_entry", (-145, 0), ("Password", "Your company password"))
     
     # Add the login button & Associated login logic (UIDataInterface)
     login_btn = ttk.Button(entry_frame, text="Login", command=attempt_login)

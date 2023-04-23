@@ -3,7 +3,7 @@
 from tkinter import *
 from tkinter import ttk
 #
-from UI.TooltipController import TooltipController
+from UI.tooltip_controller import TooltipController
 BUTTON_WIDTH = 20
 
 def constructor(ui_core, ttc:TooltipController, cache, page_data):

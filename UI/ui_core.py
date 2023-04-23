@@ -5,7 +5,7 @@ from tkinter import ttk
 from UI.PageController import PageController
 from UI.UIDataInterface import UIDataInterface
 # from UI.ThemeController import ThemeController
-from UI.TooltipController import TooltipController
+from UI.tooltip_controller import TooltipController
 
 
 class UICore:
@@ -68,4 +68,3 @@ class UICore:
         style.configure("Blue.TFrame", background="#00F")
     def silence_pylint_too_few_public_methods(self):
         """Silences pylint error"""
-        

@@ -2,7 +2,7 @@
 
 from tkinter import *
 from tkinter import ttk
-from UI.TooltipController import TooltipController
+from UI.tooltip_controller import TooltipController
 #make it so we can use the view page
 
 from .PageConstructor_view import constructor as construct_view
