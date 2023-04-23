@@ -26,17 +26,18 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
 
 
     # Add a search entry and search button
+    def perform_basic_search(*args):
+        search(search_entry_var.get(), results_frame, results_scroll, ui_core)
     search_frame = ttk.Frame(top_frame, height=30)
-    search_btn = ttk.Button(search_frame, text="Search", command=lambda: search(search_entry_var, results_frame, results_scroll, ui_core))
+    search_btn = ttk.Button(search_frame, text="Search", command=perform_basic_search)
     search_entry = ttk.Entry(search_frame, width=50, textvariable=search_entry_var)
+    search_entry_var.trace("w", perform_basic_search)
 
     # Add search filter options
     #       (employee last name, employee id, employee department id, etc.)
     # Add necessary tooltips
     filter_frame = ttk.Frame(top_frame, height=30)
 
-
-   
 
 
     FILTER0_OPTIONS = ["These", "are", "all", "valid", "options"]
@@ -102,7 +103,7 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
     back_btn.pack(side=LEFT)
 
 
-def search(data, results_frame, results_scroll, ui_core):
+def search(search_text, results_frame, results_scroll, ui_core):
     '''
     This function is called when the search button is pressed
     it takes the input from the search entry box as a parameter
@@ -120,7 +121,7 @@ def search(data, results_frame, results_scroll, ui_core):
 
 
     #end the function if there is nothing to search
-    if data.get() == "":
+    if search_text == "":
         return None
 
     IGNORED_FIELDS = [
@@ -135,7 +136,7 @@ def search(data, results_frame, results_scroll, ui_core):
             if field_name in IGNORED_FIELDS: continue
 
             #if the users query appears in the field we are looking at add the employee to the list
-            if data.get() in str(field_value):
+            if search_text in str(field_value).lower():
                 if emp in emp_list: continue
                 emp_list.append(emp)
 
