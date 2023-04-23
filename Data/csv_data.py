@@ -8,7 +8,6 @@ class CSVData:
         self.delimiter = delimiter
         self.column_count = len(self.columns)
         self.row_count = len(self.rows)
-    
     def get_columns(self) ->list:
         """Return the stored columns"""
         return self.columns
@@ -27,4 +26,5 @@ class CSVData:
 
     def set_row_value(self, row:list, column_title:str, new_value:str):
         """Get a row value, provided the row and a column title, and set its value"""
-        row[self.get_column_index[column_title]] = new_value
+        row[self.get_column_index(column_title)] = new_value
+        
