@@ -1,10 +1,12 @@
-from tkinter import *
+"""The core module for intializing UI components and holding global references"""
+from os import path
+from tkinter import Tk
 from tkinter import ttk
 from UI.PageController import PageController
 from UI.UIDataInterface import UIDataInterface
-from UI.ThemeController import ThemeController
+# from UI.ThemeController import ThemeController
 from UI.TooltipController import TooltipController
-from os import path
+
 
 class UICore:
     """Serves as a nexus for various UI classes and their communication"""
@@ -24,10 +26,7 @@ class UICore:
         root.eval("tk::PlaceWindow . center")
 
         # Determine and store the program's absolute CWD path
-
-        
         self.dir_root = path.abspath(path.join(__file__, "..\\.."))
-
         # Store root
         self.root = root
 
@@ -46,24 +45,27 @@ class UICore:
         root.mainloop()
 
     def temp_setup_styling(self):
+        """A temp method for styling UI elements"""
         style = ttk.Style()
         style.configure("Bold.TLabel", font=("Sans", 10, "bold"))
         style.configure("Error.TLabel", background="#E77", foreground="#000")
 
-        ttk.Style().configure("Indent.TFrame", background="#CCC")
-        ttk.Style().configure("Indent.TLabel", background="#CCC")
+        style.configure("Indent.TFrame", background="#CCC")
+        style.configure("Indent.TLabel", background="#CCC")
 
-        ttk.Style().configure("Public.TFrame", background="#ACA")
-        ttk.Style().configure("Private.TFrame", background="#FEC")
-        ttk.Style().configure("Admin.TFrame", background="#FAA")
-        ttk.Style().configure("PublicFieldTitle.TLabel", background="#ACA", font=("Sans", 10, "bold"))
-        ttk.Style().configure("PrivateFieldTitle.TLabel", background="#FEC", font=("Sans", 10, "bold"))
-        ttk.Style().configure("AdminFieldTitle.TLabel", background="#FAA", font=("Sans", 10, "bold"))
-        ttk.Style().configure("PublicField.TLabel", background="#ACA")
-        ttk.Style().configure("PrivateField.TLabel", background="#FEC")
-        ttk.Style().configure("AdminField.TLabel", background="#FAA")
+        style.configure("Public.TFrame", background="#ACA")
+        style.configure("Private.TFrame", background="#FEC")
+        style.configure("Admin.TFrame", background="#FAA")
+        style.configure("PublicFieldTitle.TLabel", background="#ACA", font=("Sans", 10, "bold"))
+        style.configure("PrivateFieldTitle.TLabel", background="#FEC", font=("Sans", 10, "bold"))
+        style.configure("AdminFieldTitle.TLabel", background="#FAA", font=("Sans", 10, "bold"))
+        style.configure("PublicField.TLabel", background="#ACA")
+        style.configure("PrivateField.TLabel", background="#FEC")
+        style.configure("AdminField.TLabel", background="#FAA")
 
-        ttk.Style().configure("Red.TFrame", background="#F00")
-        ttk.Style().configure("Green.TFrame", background="#0F0")
-        ttk.Style().configure("Blue.TFrame", background="#00F")
-            
+        style.configure("Red.TFrame", background="#F00")
+        style.configure("Green.TFrame", background="#0F0")
+        style.configure("Blue.TFrame", background="#00F")
+    def silence_pylint_too_few_public_methods(self):
+        """Silences pylint error"""
+        

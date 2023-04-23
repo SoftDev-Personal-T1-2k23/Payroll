@@ -18,7 +18,6 @@ class FileReader():
         csv_columns = None
         csv_rows = []
         try:
-            print(file_path)
             with open(file_path, mode='r') as f:
                 # Get CSV columns
                 csv_columns = [v.strip() for v in f.readline().split(delimiter)]
@@ -29,9 +28,10 @@ class FileReader():
                         csv_row = FileReader.cast_list_values(csv_row)
                     csv_rows.append(csv_row)
         except:
-            RuntimeError(f"Failed to read CSV file [{file_path}]")
+            print(f"Failed to read CSV file [{file_path}]")
+
         if csv_columns is None:
-            RuntimeError(f"Failed to find CSV content [{file_path}]")
+            print(f"Failed to find CSV content [{file_path}]")
         return CSVData(csv_columns, csv_rows)
     
     @staticmethod #Should probably belong in a different file

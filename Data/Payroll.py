@@ -26,7 +26,6 @@ def initialize_passwords():
     this function is for creating the hashed passwords based on the user id if the password has not yet been initialized
     '''
     # Read the CSV file
-    print(PATH_EMPLOYEE_DATA)
     csv_data = FileReader.read_csv(PATH_EMPLOYEE_DATA)
     # Check for null passwords & Add new ones if necessary
     for row in csv_data.rows:

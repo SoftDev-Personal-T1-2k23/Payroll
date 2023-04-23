@@ -2,7 +2,7 @@
 
 #> Program.py
 # Initializes the program and its components
-from UI.UICore import UICore
+from UI.ui_core import UICore
 from Data import Payroll
 
 # Initialize backend components
