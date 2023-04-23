@@ -118,7 +118,6 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
 
         columns = field_columns[priv_group_key]
         column_index = 0
-
         for field_data in priv_group_data:
             field_name = field_data[0]
             field_value = field_data[1]

@@ -56,13 +56,16 @@ class UICore:
         style.configure("Public.TFrame", background="#ACA")
         style.configure("Private.TFrame", background="#FEC")
         style.configure("Admin.TFrame", background="#FAA")
+        style.configure("Public.TEntry", background="#ACA")
+        style.configure("Private.TEntry", background="#FEC")
+        style.configure("Admin.TEntry", background="#FAA")
         style.configure("PublicFieldTitle.TLabel", background="#ACA", font=("Sans", 10, "bold"))
         style.configure("PrivateFieldTitle.TLabel", background="#FEC", font=("Sans", 10, "bold"))
         style.configure("AdminFieldTitle.TLabel", background="#FAA", font=("Sans", 10, "bold"))
         style.configure("PublicField.TLabel", background="#ACA")
         style.configure("PrivateField.TLabel", background="#FEC")
         style.configure("AdminField.TLabel", background="#FAA")
-
+        
         style.configure("Red.TFrame", background="#F00")
         style.configure("Green.TFrame", background="#0F0")
         style.configure("Blue.TFrame", background="#00F")

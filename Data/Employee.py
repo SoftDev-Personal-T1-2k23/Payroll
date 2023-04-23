@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 
 import Data.Payroll as Payroll
 
-DATA_ACCESS_VIEW = {
+DATA_ACCESS_VIEW = {# Which privilege levels have access to view what data
     "public": [
         "FirstName", "LastName", "JobTitle", "ID", "StartDate", "Department"
     ],
@@ -13,7 +13,7 @@ DATA_ACCESS_VIEW = {
     ],
     "admin": []
 }
-DATA_ACCESS_MODIFY = {
+DATA_ACCESS_MODIFY = {# Which privlege levels have access to edit what data
     "public": [],
     "private": [
         "Address", "City", "State", "Zip", "Route", "Account", "Email", "Phone", "ClassificationId", "Salary", "PayMethod",
@@ -23,6 +23,37 @@ DATA_ACCESS_MODIFY = {
         "FirstName", "LastName", "ID", "JobTitle", "StartDate", "Department", "Privilege"
     ]
 }
+DATA_PRESENTATION = {# Where to display what data
+    "public": [
+        "FirstName", "LastName", "JobTitle", "ID", "StartDate", "Department"
+    ],
+    "private": [
+        "Address", "City", "State", "Zip", "Route", "Account", "Email", "Phone", "ClassificationId", "Salary", "PayMethod",
+        "Commission", "Route", "Account"
+    ],
+    "admin": [
+        "Privilege"
+    ]
+}
+
+def format_field_data(data):
+    """Format data to match the presentation constant (DATA_PRESENTATION)"""
+    data_new = {
+        "public": [],
+        "private": [],
+        "admin": []
+    }
+    for (_, field_list) in data.items():
+        for field_pair in field_list:
+            field_title = field_pair[0]
+            for priv_group_2 in data_new.keys():
+                if field_title in DATA_PRESENTATION[priv_group_2]:
+                    data_new[priv_group_2].append(field_pair)
+                    break
+    print(data)
+    print(data_new)
+    return data_new
+
 
 class Employee:
     #Employee object contain their name, id, payment info, classification info, and adress
@@ -158,7 +189,7 @@ class Employee:
             "private": [(key, self.data[key]) for key in private_accessible_fields] if private_accessible_fields else [],
             "admin": [(key, self.data[key]) for key in admin_accessible_fields] if admin_accessible_fields else []
         }
-        return field_data
+        return format_field_data(field_data)
     
     def get_editable_field_data(self):
         """Return fields the current user has privilege to edit"""
@@ -178,7 +209,7 @@ class Employee:
             "private": [(key, self.data[key]) for key in private_accessible_fields] if private_accessible_fields else [],
             "admin": [(key, self.data[key]) for key in admin_accessible_fields] if admin_accessible_fields else []
         }
-        return field_data
+        return format_field_data(field_data)
 
     def issue_payment(self):
         payment = self.classification.compute_payment()
