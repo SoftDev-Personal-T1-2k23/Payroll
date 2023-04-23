@@ -1,5 +1,5 @@
 """A class for writing data to files"""
-from Data.CSVData import CSVData
+from Data.csv_data import CSVData
 
 class FileWriter():
     

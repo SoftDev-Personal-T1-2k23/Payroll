@@ -2,7 +2,7 @@
 import os
 import hashlib
 from Data.FileConstants import DIR_ROOT, PATH_EMPLOYEE_DATA
-from Data.FileReader import FileReader
+from Data.file_reader import FileReader
 from Data.FileWriter import FileWriter
 from Data.Database import Database
 

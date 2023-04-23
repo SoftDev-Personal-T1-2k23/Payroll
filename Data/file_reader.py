@@ -1,5 +1,5 @@
 """Read file data, process, and return the results"""
-from Data.CSVData import CSVData
+from Data.csv_data import CSVData
 
 class FileReader():
     """A class for reading text content from various files"""
@@ -18,22 +18,21 @@ class FileReader():
         csv_columns = None
         csv_rows = []
         try:
-            with open(file_path, mode='r') as f:
+            with open(file_path, mode='r', encoding="UTF-8") as file:
                 # Get CSV columns
-                csv_columns = [v.strip() for v in f.readline().split(delimiter)]
+                csv_columns = [v.strip() for v in file.readline().split(delimiter)]
                 # Gather and organize CSV data
-                for row in f:
+                for row in file:
                     csv_row = [v.strip() for v in row.split(delimiter)]
                     if row_value_types:
-                        csv_row = FileReader.cast_list_values(csv_row)
+                        csv_row = FileReader.cast_list_values(csv_row, row_value_types)
                     csv_rows.append(csv_row)
-        except:
+        except FileNotFoundError:
             print(f"Failed to read CSV file [{file_path}]")
 
         if csv_columns is None:
             print(f"Failed to find CSV content [{file_path}]")
         return CSVData(csv_columns, csv_rows)
-    
     @staticmethod #Should probably belong in a different file
     def cast_list_values(values:list, value_types:list):
         """Casts a list of values based upon a list of types
@@ -46,14 +45,14 @@ class FileReader():
         """
         val_count = len(values)
         val_type_count = len(value_types)
-        if val_type_count < val_count: RuntimeError(f"Failed to cast values; value_types only contains only [{val_type_count}] elements")
+        if val_type_count < val_count:
+            print(f"Failed cast; value_types only has [{val_type_count}] elements")
+            return None
 
-        for i in range(len(values)):
+        for (i, _) in enumerate(values):
             try:
                 values[i] = value_types[i](values[i])
-            except:
+            except ValueError:
                 values[i] = None
                 print(f"Failed to cast value [{i}:{values[i]}] into type [{value_types[i]}]")
         return values
-
-    

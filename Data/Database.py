@@ -1,7 +1,7 @@
 """A data management class"""
 
 from Data.FileConstants import PATH_EMPLOYEE_DATA
-from Data.FileReader import FileReader
+from Data.file_reader import FileReader
 from Data.Employee import Employee
 
 EMPLOYEES = None
