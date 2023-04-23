@@ -5,12 +5,12 @@ if %IS_DEBUG% == 1 goto :build_debug
 
 :build_release
 set "EXE_TITLE=Program-Release.exe"
-pyinstaller Program.py --onefile --windowed
+pyinstaller program.py --onefile --windowed
 goto :rename_exe
 
 :build_debug
 set "EXE_TITLE=Program-Debug.exe"
-pyinstaller Program.py --onefile
+pyinstaller program.py --onefile
 
 :rename_exe
 cd /d "%~dp0\dist"

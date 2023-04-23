@@ -1,7 +1,9 @@
+"""A script with the purpose of initializing all program components"""
+
 #> Program.py
 # Initializes the program and its components
 from UI.UICore import UICore
-import Data.Payroll as Payroll
+from Data import Payroll
 
 # Initialize backend components
 Payroll.initialize_passwords()
