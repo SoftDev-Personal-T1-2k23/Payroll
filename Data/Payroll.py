@@ -187,7 +187,24 @@ def get_row(employees, user):
         target_row += 1
     return None
 
-# not used anywhere in the code
+def set_password(employee, new_pass):
+    """Set a new password"""
+    hashed_pass = hash_password(new_pass)
+
+    print("saving new password: ", hashed_pass)
+
+    # set_data(row, 13, hashed_pass)
+    csv_data = FileReader.read_csv(PATH_EMPLOYEE_DATA)
+    emp_row_index = get_row(EMPLOYEES.employees, employee.data["FirstName"])
+    pass_index = csv_data.columns.index("Password")
+    emp_row = csv_data.rows[emp_row_index]
+
+    emp_row[pass_index] = hashed_pass
+    FileWriter.write_csv(PATH_EMPLOYEE_DATA, csv_data)
+
+    USER.data["Password"] = hashed_pass
+
+    return True
 # def set_data(row, col, data):
 #     df = pd.read_csv('employees.csv')
 #     df.iloc[row, col] = data

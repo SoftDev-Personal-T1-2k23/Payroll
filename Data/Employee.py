@@ -50,8 +50,6 @@ def format_field_data(data):
                 if field_title in DATA_PRESENTATION[priv_group_2]:
                     data_new[priv_group_2].append(field_pair)
                     break
-    print(data)
-    print(data_new)
     return data_new
 
 

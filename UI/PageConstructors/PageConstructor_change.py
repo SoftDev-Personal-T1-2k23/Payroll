@@ -10,6 +10,8 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
     ttk.Style().configure("Indent.TLabel", background="#CCC")
     ttk.Style().configure("Middle.TFrame", background="#c0c6cf")
 
+    target_employee = ui_core.ui_data_interface.get_target_employee()
+
     def save_info(new_entry, confirm_entry, unmatch_error, save_button): #Nested for ui_core param scope
         # Get the information from the fields and save it to a file or database
         # Do something with the information (e.g. save to a file or database)
@@ -18,7 +20,7 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
         if new_pass == confirm_pass:
             unmatch_error.configure(text="Change succesful!", foreground="blue")
             save_button.grid(row=3)
-            ui_core.ui_data_interface.set_new_password(new_pass)
+            ui_core.ui_data_interface.set_new_password(target_employee, new_pass)
         else:
             unmatch_error.configure(text="Passwords don't match")
             save_button.grid(row=3)

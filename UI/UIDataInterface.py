@@ -200,16 +200,11 @@ class UIDataInterface:
         # Request for a csv file containing a collection of employee information be generated and exported (via backend) 
         # Return whether the process was successful
 
-    def set_new_password(self, password:str) -> bool:
+    def set_new_password(self, employee, password:str) -> bool:
         """Set a user's new password
             Params:
                 password: New password to use
             Returns:
                 success: Whether the change was successful
         """
-        hashed_pass = Payroll.hash_password(password)
-        Payroll.USER.data["Password"] = hashed_pass
-        row = Payroll.get_row(Payroll.EMPLOYEES.employees, Payroll.USER.data["FirstName"])
-        print("saving password: " + str(row))
-        Payroll.set_data(row, 13, hashed_pass)
-        return True
+        return Payroll.set_password(employee, password)

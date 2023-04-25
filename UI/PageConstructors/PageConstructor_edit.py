@@ -11,6 +11,7 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
     udi = ui_core.ui_data_interface
 
     employee = udi.get_target_employee()
+    udi.set_target_employee(employee) # Just in case TARGET_EMPLOYEE is None
     target_employee_data = employee.get_editable_field_data()
 
     # Split the page into necessary panels
@@ -75,6 +76,7 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
         "private": [],
         "admin": []
     }
+    # Generate columns
     for key in field_columns.keys():
         for _ in range(COLUMN_COUNT):
             parent_frame = field_column_parent_lookup[key]
@@ -86,6 +88,8 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
             field_columns[key].append(column)
 
     # row = 0
+    field_entry_pairs = []
+    # Generate fields
     for (priv_group_key, priv_group_data) in target_employee_data.items():
         frame_priv_style = frame_priv_style_lookup[priv_group_key]
         field_title_priv_style = field_title_priv_style_lookup[priv_group_key]
@@ -107,6 +111,8 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
             frame_field.pack(side=TOP, fill=X)
             label_title.pack(side=LEFT, fill=X)
             label_value.pack(side=RIGHT, fill=X)
+
+            field_entry_pairs.append((field_name, label_value))
 
             column_index += 1
             column_index %= COLUMN_COUNT
@@ -144,11 +150,11 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
 
 
     #Create change password button
-    # change_btn = ttk.Button(admin_frame, text="change password", width=BUTTON_WIDTH, command=lambda: ui_core.page_controller.open_page("change"))
+    change_btn = ttk.Button(admin_frame, text="change password", width=BUTTON_WIDTH, command=lambda: ui_core.page_controller.open_page("change"))
 
     # change_btn.grid(column=1, row=target_row, padx=5, pady=5)
     # # Create Save button
-    # save_btn = ttk.Button(middle_frame, text="Save", command=lambda: udi.update_employee_info([(pair[0], pair[1].get()) for pair in entry_dict.items()]))
+    save_btn = ttk.Button(middle_frame, text="Save", command=lambda: udi.update_employee_info([(pair[0], pair[1].get()) for pair in field_entry_pairs]))
     # # save_button.grid(column=1, row=2, padx=5, pady=5)
 
     # Validate shown fields, if changed
@@ -171,9 +177,11 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
 
     private_frame.pack(side=TOP)
     admin_frame.pack(side=TOP)
+    change_btn.pack(side=BOTTOM)
 
     bottom_frame.pack(side=LEFT)
     back_btn.pack(side=LEFT)
+    save_btn.pack(side=LEFT)
     # save_btn.pack(side=LEFT)
 
 
