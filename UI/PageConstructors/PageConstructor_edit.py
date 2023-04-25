@@ -10,9 +10,8 @@ BUTTON_WIDTH = 20
 def constructor(ui_core, ttc:TooltipController, cache, page_data):
     udi = ui_core.ui_data_interface
 
-    employee = udi.get_target_employee()
-    udi.set_target_employee(employee) # Just in case TARGET_EMPLOYEE is None
-    target_employee_data = employee.get_editable_field_data()
+    target_employee = udi.get_target_employee()
+    target_employee_data = target_employee.get_editable_field_data()
 
     # Split the page into necessary panels
     base_frame = ttk.Frame(ui_core.root, padding=15)
@@ -23,7 +22,7 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
 
     header_frame = ttk.Frame(top_frame, height=30)
 
-    emp_title = ttk.Label(header_frame, text=employee.data["FirstName"] + " " + employee.data["LastName"], style="Indent.TLabel")
+    emp_title = ttk.Label(header_frame, text=target_employee.data["FirstName"] + " " + target_employee.data["LastName"], style="Indent.TLabel")
     pay_report_btn = ttk.Button(header_frame, text="Generate Pay Report")
     csv_btn = ttk.Button(header_frame, text="Export CSV")
 
@@ -40,7 +39,7 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
 
     # Add a "to prev page" button (-> home page | search page) & other "ease of use" buttons
     bottom_frame = ttk.Frame(base_frame, height=50)
-    back_btn = ttk.Button(bottom_frame, text="Back", command=lambda: ui_core.page_controller.open_page("home"))
+    back_btn = ttk.Button(bottom_frame, text="Back", command=lambda: ui_core.page_controller.open_prev_page())
 
     # Populate the three panels with the relevant stored information (text labels)
 
@@ -154,7 +153,12 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
 
     # change_btn.grid(column=1, row=target_row, padx=5, pady=5)
     # # Create Save button
-    save_btn = ttk.Button(middle_frame, text="Save", command=lambda: udi.update_employee_info([(pair[0], pair[1].get()) for pair in field_entry_pairs]))
+    def save_employee_data():
+        print(target_employee)
+        udi.set_target_employee(target_employee)
+        udi.update_employee_info([(pair[0], pair[1].get()) for pair in field_entry_pairs])
+    
+    save_btn = ttk.Button(middle_frame, text="Save", command=save_employee_data)
     # # save_button.grid(column=1, row=2, padx=5, pady=5)
 
     # Validate shown fields, if changed

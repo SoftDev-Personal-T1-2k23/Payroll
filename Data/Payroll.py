@@ -96,6 +96,7 @@ def save_info(field_data):
     takes a dictionary of entry objects as a parameter
     the dictionary contains field names and the associated entry for that field. 
     '''
+    print(TARGET_EMPLOYEE)
     # Get CSV data & Locate the target employee
     csv_data = FileReader.read_csv(PATH_EMPLOYEE_DATA)
     csv_row = None
@@ -103,6 +104,8 @@ def save_info(field_data):
     for row in csv_data.rows:
         if row[col_index] == TARGET_EMPLOYEE.data["ID"]:
             csv_row = row
+            break
+
     # Return if the target employee does not exist
     if not csv_row:
         print("Error: Failed to save employee info; employee not found")
@@ -115,17 +118,17 @@ def save_info(field_data):
         
         # Exceptions
         if field_key == "FirstName":
-            row[1] = field_val
+            csv_row[1] = field_val
             TARGET_EMPLOYEE.data["FirstName"] = field_val
             continue
         elif field_key == "LastName":
-            row[1] += f" {field_val}"
+            csv_row[1] += f" {field_val}"
             TARGET_EMPLOYEE.data["LastName"] = field_val
             continue
         
         # Update values
         col_index = csv_data.get_column_index(field_key)
-        row[col_index] = field_val
+        csv_row[col_index] = field_val
         TARGET_EMPLOYEE.data[field_key] = field_val
 
     

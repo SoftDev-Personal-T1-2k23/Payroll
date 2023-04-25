@@ -140,18 +140,20 @@ def search(search_text, results_frame, results_scroll, ui_core):
                 if emp in emp_list: continue
                 emp_list.append(emp)
 
-    def open_employee_view_page(emp):
+    #make the entries
+    def view_employee_data(emp):
+        print("TEMP:SEARCH", emp.data["Name"])
         udi.set_target_employee(emp)
         ui_core.page_controller.open_page("view")
 
-    #make the entries
     row = 0
     for emp in emp_list:
+        print()
         frame = ttk.Frame(results_frame)
         frame_emp_name = ttk.Frame(frame, width=50)
         label_emp_name = ttk.Label(frame_emp_name, text=emp.data["Name"])
         content_frame = ttk.Frame(frame)
-        btn_view = ttk.Button(content_frame, text="View", command=lambda: open_employee_view_page(emp))
+        btn_view = ttk.Button(content_frame, text="View", command=lambda e=emp: view_employee_data(e))
         
         frame.pack(side=TOP, fill=X, padx=(2,2), pady=(2,2))
         frame_emp_name.pack(side=LEFT)

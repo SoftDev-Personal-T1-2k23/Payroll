@@ -12,6 +12,7 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
     user_id = udi.get_user_id()
     user_access_level = udi.get_access_level()
     employee = udi.get_target_employee()
+
     target_employee_data = employee.get_viewable_field_data()
 
     # Split the page into necessary panels
@@ -194,8 +195,13 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
     bottom_frame.pack(side=LEFT)
     back_btn.pack(side=LEFT)
     #make an edit button if the user is viewing their own page or if they have administrator privileges
+    def edit_employee():
+        udi.set_target_employee(employee)
+        print("TEMP:VIEW", udi.get_target_employee())
+        ui_core.page_controller.open_page("edit")
+
     if employee.data["ID"] == user_id or user_access_level == "administrator":
-        edit_btn = ttk.Button(bottom_frame, text="edit", command=lambda i=employee: ui_core.page_controller.open_page("edit", i))
+        edit_btn = ttk.Button(bottom_frame, text="edit", command=edit_employee)
         edit_btn.pack(side = LEFT)
     # else:
     #     print("edit access denied " + str(employee.id == payroll.USER.id) + " " + str(employee.privilege == "administrator"))
