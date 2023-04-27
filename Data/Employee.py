@@ -11,7 +11,9 @@ DATA_ACCESS_VIEW = {# Which privilege levels have access to view what data
         "Address", "City", "State", "Zip", "Route", "Account", "Email", "Phone", "ClassificationId", "Salary", "PayMethod",
         "Commission", "Route", "Account", "Privilege"
     ],
-    "admin": []
+    "admin": [
+        "IsArchived"
+    ]
 }
 DATA_ACCESS_MODIFY = {# Which privlege levels have access to edit what data
     "public": [],
@@ -20,7 +22,7 @@ DATA_ACCESS_MODIFY = {# Which privlege levels have access to edit what data
         "Commission", "Route", "Account"
     ],
     "admin": [
-        "FirstName", "LastName", "ID", "JobTitle", "StartDate", "Department", "Privilege"
+        "FirstName", "LastName", "ID", "JobTitle", "StartDate", "Department", "Privilege", "IsArchived"
     ]
 }
 DATA_PRESENTATION = {# Where to display what data
@@ -32,7 +34,7 @@ DATA_PRESENTATION = {# Where to display what data
         "Commission", "Route", "Account"
     ],
     "admin": [
-        "Privilege"
+        "Privilege", "IsArchived"
     ]
 }
 
@@ -169,6 +171,24 @@ class Employee:
             self.classification = Hourly(hourly)
         # self.quick_attribute['Classification'] = str(self.classification)
     
+    def archive(self):
+        """Archive this employee
+        
+            Returns:
+                archival_success: Whether archival was successful
+        """
+        self.data["IsArchived"] = "1"
+        return True
+
+    def unarchive(self):
+        """Unarchive this employee
+        
+            Returns:
+                unarchival_success: Whether unarchival was successful
+        """
+        self.data["IsArchived"] = "0"
+        return True
+
     def get_viewable_field_data(self):
         """Return fields the current user has privilege to edit"""
         # Get accessible fields

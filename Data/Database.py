@@ -2,6 +2,7 @@
 
 from Data.FileConstants import PATH_EMPLOYEE_DATA
 from Data.file_reader import FileReader
+from Data.FileWriter import FileWriter
 from Data.Employee import Employee
 
 EMPLOYEES = None
@@ -18,6 +19,25 @@ class Database:
         for row in emp_csv_data.rows:
             employee = Employee(emp_csv_data.columns, row)
             self.add_employee(employee)
+
+    def update_employee(self, employee):
+        """Update an employees info stored within the database"""
+        # Load the CSV
+        csv_data = FileReader.read_csv(PATH_EMPLOYEE_DATA)
+        csv_id_column_index = csv_data.columns.index("ID")
+        # Find the employee row
+        emp_csv_row = None
+        for row in csv_data.rows:
+            row_emp_id = row[csv_id_column_index]
+            if row_emp_id == employee.data["ID"]:
+                emp_csv_row = row
+                break
+        # Update all information
+        for (i, v) in enumerate(emp_csv_row):
+            row_val_title = csv_data.columns[i]
+            emp_csv_row[i] = employee.data[row_val_title]
+        # Save the CSV
+        FileWriter.write_csv(PATH_EMPLOYEE_DATA, csv_data)
 
     def add_employee(self, employee):
         #takes an employee object and adds it to the employees dictionary

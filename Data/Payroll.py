@@ -4,7 +4,7 @@ import hashlib
 from Data.FileConstants import DIR_ROOT, PATH_EMPLOYEE_DATA
 from Data.file_reader import FileReader
 from Data.FileWriter import FileWriter
-from Data.Database import Database
+from Data.Database import Database, EMPLOYEES
 
 USER = None
 TARGET_EMPLOYEE = None #this is to keep track of what the view and edit pages should display
@@ -96,7 +96,6 @@ def save_info(field_data):
     takes a dictionary of entry objects as a parameter
     the dictionary contains field names and the associated entry for that field. 
     '''
-    print(TARGET_EMPLOYEE)
     # Get CSV data & Locate the target employee
     csv_data = FileReader.read_csv(PATH_EMPLOYEE_DATA)
     csv_row = None
@@ -219,20 +218,21 @@ def load_database():
     #Startup the database and store a hoisted reference
     global EMPLOYEES
     EMPLOYEES = Database()
+    print(EMPLOYEES)
 
-def load_employees(data = PATH_EMPLOYEE_DATA):
-    #reads all employees in from the indicated csv file. Defaults employees.csv
-    raw = []
-    global EMPLOYEES
-    with open(DIR_ROOT + "\\" + data, 'r') as file:
-        for line in file:
-            try:
-                temp = line.strip().split(',')
-                temp[0] = int(temp[0])
-                raw.append(temp)
-            except:
-                pass
-        EMPLOYEES = Database(raw)
+# def load_employees(data = PATH_EMPLOYEE_DATA):
+#     #reads all employees in from the indicated csv file. Defaults employees.csv
+#     raw = []
+#     global EMPLOYEES
+#     with open(DIR_ROOT + "\\" + data, 'r') as file:
+#         for line in file:
+#             try:
+#                 temp = line.strip().split(',')
+#                 temp[0] = int(temp[0])
+#                 raw.append(temp)
+#             except:
+#                 pass
+#         EMPLOYEES = Database(raw)
 
 
 

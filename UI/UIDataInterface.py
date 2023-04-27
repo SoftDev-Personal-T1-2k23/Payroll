@@ -1,4 +1,5 @@
 import Data.Payroll as Payroll
+from Data.Database import EMPLOYEES
 
 class UIDataInterface:
     """An interface for communication with non-UI parts of the program"""
@@ -104,6 +105,14 @@ class UIDataInterface:
         # Return a collection of employees
         return Payroll.EMPLOYEES.employees
 
+    def get_user(self):
+        """Get the current program user (logged in employee)
+        
+            Returns:
+                current_user: The current employee logged in
+        """
+        return Payroll.USER
+
     def get_target_employee(self):
         """Return the current target employee
 
@@ -167,16 +176,41 @@ class UIDataInterface:
         Payroll.save_info(emp_info)
         return True
 
-    def archive_employee(self, emp_id:str) -> bool:
+    def archive_employee(self, emp) -> bool:
         """Set an existing employee as archived
          
           Params:
-              emp_id: The employee id to use
+              emp: The employee
           Returns:
               success: Whether the employee was archived successfully or not
         """
-        # Request that an employee via employee id be archived (via backend)
+        # Check that we aren't archiving ourself
+        if emp == self.get_user():
+            return False
+        # Archive the employee
+        result = emp.archive()
+        # Update the database & CSV
+        Payroll.EMPLOYEES.update_employee(emp)
         # Return whether the archival was successful
+        return result
+
+    def unarchive_employee(self, emp) -> bool:
+        """Set an existing employee as unarchived
+         
+          Params:
+              emp: The employee
+          Returns:
+              success: Whether the employee was archived successfully or not
+        """
+        # Check that we aren't unarchiving ourself
+        if emp == self.get_user():
+            return False
+        # Unarchive the employee
+        result = emp.unarchive()
+        # Update the database & CSV
+        Payroll.EMPLOYEES.update_employee(emp)
+        # Return whether the archival was successful
+        return result
 
     def generate_pay_report(self, emp_id:str) -> bool:
         """Generate a pay report for a particular employee

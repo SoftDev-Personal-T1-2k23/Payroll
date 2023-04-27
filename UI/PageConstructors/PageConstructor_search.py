@@ -8,11 +8,12 @@ from UI.tooltip_controller import TooltipController
 from .PageConstructor_view import constructor as construct_view
 BUTTON_WIDTH = 20
 
-
 #make a list to keep track of what employees need to be displayed
 display_list = []
 
 def constructor(ui_core, ttc:TooltipController, cache, page_data):
+    udi = ui_core.ui_data_interface
+
     search_entry_var = StringVar()
     filter0_var = StringVar()
     filter1_var = StringVar()
@@ -108,10 +109,9 @@ def search(search_text, results_frame, results_scroll, ui_core):
     This function is called when the search button is pressed
     it takes the input from the search entry box as a parameter
     '''
-    # print(data.get())
     udi = ui_core.ui_data_interface
-
-    #grab the employee database
+    current_user = udi.get_user()
+    user_is_admin = udi.get_access_level() == "administrator"
     employees = udi.get_employees()
 
     #reset the display_list and clear the frame
@@ -142,23 +142,58 @@ def search(search_text, results_frame, results_scroll, ui_core):
 
     #make the entries
     def view_employee_data(emp):
-        print("TEMP:SEARCH", emp.data["Name"])
         udi.set_target_employee(emp)
         ui_core.page_controller.open_page("view")
+    
+    def archive_employee(emp):
+        udi.archive_employee(emp)
+        search(search_text, results_frame, results_scroll, ui_core)
+    
+    def unarchive_employee(emp):
+        udi.unarchive_employee(emp)
+        search(search_text, results_frame, results_scroll, ui_core)
 
+    RESULT_STYLE_LOOKUP = {
+        "archived": {
+            "frame": "Admin.TFrame",
+            "label": "Admin.TLabel",
+        },
+    }
     row = 0
     for emp in emp_list:
-        print()
+        is_archived = emp.data["IsArchived"] == "1"
+        if is_archived and not user_is_admin: continue
+
         frame = ttk.Frame(results_frame)
         frame_emp_name = ttk.Frame(frame, width=50)
         label_emp_name = ttk.Label(frame_emp_name, text=emp.data["Name"])
         content_frame = ttk.Frame(frame)
         btn_view = ttk.Button(content_frame, text="View", command=lambda e=emp: view_employee_data(e))
+        btn_archive = None
+        if user_is_admin and not is_archived:
+            btn_archive = ttk.Button(content_frame, text="Archive", command=lambda e=emp: archive_employee(e))
+        btn_unarchive = None
+        if user_is_admin and is_archived:
+            btn_unarchive = ttk.Button(content_frame, text="Unarchive", command=lambda e=emp: unarchive_employee(e))
         
+        if is_archived:
+            style_info = RESULT_STYLE_LOOKUP["archived"]
+            frame_style = style_info["frame"]
+            label_style = style_info["label"]
+
+            frame.configure(style=frame_style)
+            frame_emp_name.configure(style=frame_style)
+            label_emp_name.configure(style=label_style)
+            content_frame.configure(style=frame_style)
+
         frame.pack(side=TOP, fill=X, padx=(2,2), pady=(2,2))
         frame_emp_name.pack(side=LEFT)
         label_emp_name.pack(padx=(0,10))
         content_frame.pack(side=LEFT, expand=TRUE, fill=X)
         btn_view.pack(side=RIGHT)
+        if btn_archive is not None:
+            btn_archive.pack(side=RIGHT)
+        if btn_unarchive is not None:
+            btn_unarchive.pack(side=RIGHT)
 
         row += 1
