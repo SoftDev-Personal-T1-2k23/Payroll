@@ -8,6 +8,8 @@ from UI.tooltip_controller import TooltipController
 from .PageConstructor_view import constructor as construct_view
 BUTTON_WIDTH = 20
 
+last_search_text = None # last search text; used for backward page navigation
+
 #make a list to keep track of what employees need to be displayed
 display_list = []
 
@@ -27,8 +29,9 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
 
 
     # Add a search entry and search button
-    def perform_basic_search(*args):
-        search(search_entry_var.get(), results_frame, results_scroll, ui_core)
+    def perform_basic_search(*args, search_text=None):
+        s_text = search_entry_var.get() if search_text is None else search_text
+        search(s_text, results_frame, results_scroll, ui_core)
     search_frame = ttk.Frame(top_frame, height=30)
     search_btn = ttk.Button(search_frame, text="Search", command=perform_basic_search)
     search_entry = ttk.Entry(search_frame, width=50, textvariable=search_entry_var)
@@ -104,6 +107,14 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
     back_btn.pack(side=LEFT)
 
 
+    # Perform setup logic
+    global last_search_text
+    if last_search_text is not None:
+        perform_basic_search(search_text=last_search_text)
+        search_entry.insert(0, last_search_text)
+        last_search_text = None
+
+
 def search(search_text, results_frame, results_scroll, ui_core):
     '''
     This function is called when the search button is pressed
@@ -142,6 +153,8 @@ def search(search_text, results_frame, results_scroll, ui_core):
 
     #make the entries
     def view_employee_data(emp):
+        global last_search_text
+        last_search_text = search_text
         udi.set_target_employee(emp)
         ui_core.page_controller.open_page("view")
     
