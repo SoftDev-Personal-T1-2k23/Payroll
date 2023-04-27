@@ -151,8 +151,10 @@ class Employee:
         #     "administrator": self.quick_attribute,
         #     "employee": {'First name': self.data["FirstName"], 'Last name': self.data["LastName"], 'Email': self.data["Email"], 'Phone': self.data["Phone"], 'JobTitle': self.data["JobTitle"]}
         # }
-        
-        
+    @staticmethod
+    def get_fake_data_keys():
+        """Get additional data created that isn't stored in employees.csv"""
+        return ["FirstName", "LastName"]
 
     @staticmethod
     def set_classification(self, classification, salary = -1, commission = -1, hourly = -1):

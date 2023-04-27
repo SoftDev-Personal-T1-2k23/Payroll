@@ -1,5 +1,11 @@
+import os
+
 import Data.Payroll as Payroll
 from Data.Database import EMPLOYEES
+from Data.FileWriter import FileWriter
+from Data.FileConstants import DIR_ROOT
+from Data.csv_data import CSVData
+from Data.Employee import Employee
 
 class UIDataInterface:
     """An interface for communication with non-UI parts of the program"""
@@ -223,16 +229,40 @@ class UIDataInterface:
         # Request for a pay report to be generated and exported (via backend)
         # Return whether the process was successful
 
-    def csv_export(self, emp_id_list:list) -> bool:
+    def export_csv(self, file_name:str, emp_list:list) -> bool:
         """Generate and export a csv file containing employees' information
         
         Params:
-            emp_id_list: The list employee ids to use
+            file_name: The file name to export with
+            emp_list: The list employee ids to use
         Returns:
             success: Whether the pay csv data was generated and exported successfully or not
         """
-        # Request for a csv file containing a collection of employee information be generated and exported (via backend) 
+        # Request for a csv file containing a collection of employee information be generated and exported (via backend)
+        export_path = os.path.join(DIR_ROOT, f"{file_name}.csv")
+
+        # Assemble CSV data
+        fake_data_keys = Employee.get_fake_data_keys()
+        csv_column_count = -1
+        csv_columns = []
+        csv_rows = []
+        for col_title in emp_list[0].data.keys(): # Unsafe key ordering; may not match employees.csv
+            if not col_title in fake_data_keys:
+                csv_columns.append(col_title)
+        csv_column_count = len(csv_columns)
+
+        for emp in emp_list:
+            emp_row = []
+            for (i, emp_val) in enumerate(emp.data.values()):
+                if i >= csv_column_count: break
+                emp_row.append(emp_val)
+            csv_rows.append(emp_row)
+        
+        csv_data = CSVData(csv_columns, csv_rows)
+        # Write to new file
+        FileWriter.write_csv(export_path, csv_data)
         # Return whether the process was successful
+        return True
 
     def set_new_password(self, employee, password:str) -> bool:
         """Set a user's new password

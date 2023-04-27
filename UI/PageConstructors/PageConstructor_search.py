@@ -9,6 +9,7 @@ from .PageConstructor_view import constructor as construct_view
 BUTTON_WIDTH = 20
 
 last_search_text = None # last search text; used for backward page navigation
+current_search_results = None # Current search results
 
 #make a list to keep track of what employees need to be displayed
 display_list = []
@@ -72,6 +73,11 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
     results_frame = ttk.Frame(middle_frame, width=400, height=300, style="Indent.TFrame")
     results_frame.pack_propagate(False)
     results_scroll = ttk.Scrollbar(results_frame)
+    def export_search_results():
+        if current_search_results is None: return
+        udi.export_csv("export", current_search_results)
+    csv_btn = ttk.Button(middle_frame, text="Export CSV", width=BUTTON_WIDTH, command=export_search_results)
+    ttc.add_tooltip(csv_btn, "export_csv_btn", (-175, 0), ("Export CSV", "Export search results"))
 
 
     # Add a "to home" button (-> home page) & other "ease of use" buttons
@@ -102,6 +108,7 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
     middle_frame.pack(side=TOP, expand=TRUE, fill=BOTH)
     results_frame.pack(side=TOP, expand=TRUE, pady=(10,0))
     results_scroll.pack(side=RIGHT, fill=Y)
+    csv_btn.pack(side=BOTTOM)
 
     bottom_frame.pack(side=LEFT)
     back_btn.pack(side=LEFT)
@@ -172,10 +179,15 @@ def search(search_text, results_frame, results_scroll, ui_core):
             "label": "Admin.TLabel",
         },
     }
+
+    global current_search_results
+    current_search_results = []
     row = 0
     for emp in emp_list:
         is_archived = emp.data["IsArchived"] == "1"
         if is_archived and not user_is_admin: continue
+
+        current_search_results.append(emp)
 
         frame = ttk.Frame(results_frame)
         frame_emp_name = ttk.Frame(frame, width=50)

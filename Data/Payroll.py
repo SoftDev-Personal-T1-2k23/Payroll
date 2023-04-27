@@ -218,7 +218,6 @@ def load_database():
     #Startup the database and store a hoisted reference
     global EMPLOYEES
     EMPLOYEES = Database()
-    print(EMPLOYEES)
 
 # def load_employees(data = PATH_EMPLOYEE_DATA):
 #     #reads all employees in from the indicated csv file. Defaults employees.csv
@@ -277,7 +276,7 @@ def run_payroll():
 
 
 def main():
-    load_employees()
+    # load_employees()
     process_timecards()
     process_receipts()
     run_payroll()
