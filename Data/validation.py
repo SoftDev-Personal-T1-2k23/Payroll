@@ -64,6 +64,8 @@ class Validation():
             Params:
                 field_title: The field title
                 field_value: The field value
+            Returns:
+                validation_result: success: True, failure: validation_error
         """
         # Get field regex
         regex = VALIDATION_REGEX[field_title]
