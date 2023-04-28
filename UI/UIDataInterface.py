@@ -133,6 +133,11 @@ class UIDataInterface:
             
         """
         Payroll.make_new_employee(emp_info)
+
+    def validate_entries(self, emp_info:dict):
+        #make a dictionary matching labels to validation 
+        print(emp_info)
+
     def set_target_employee(self, employee=None) -> bool:
         """Sets the payroll's target employee
             Params:
