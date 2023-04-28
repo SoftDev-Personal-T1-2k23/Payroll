@@ -203,12 +203,12 @@ def make_new_employee(emp_info:dict):
         
     employee = Employee(csv_data.columns, row)
     # set target employee to that
-    EMPLOYEE.add_employee(employee)
+    EMPLOYEES.add_employee(employee)
 
 
     # EMPLOYEES.employees
 
-    
+
 #helper function for getting the id of a user via the first name
 def get_id(employees, user):
     for key in employees:
