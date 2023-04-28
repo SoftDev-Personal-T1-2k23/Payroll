@@ -197,10 +197,10 @@ def make_new_employee(emp_info:dict):
         # create a writer object
         writer = csv.writer(file)
 
-    # fill it with information
-    writer.writerow(row)
-    #generate employee using that info
-    
+        # fill it with information
+        writer.writerow(row)
+        #generate employee using that info
+        
     employee = Employee(csv_data.columns, row)
     # set target employee to that
     EMPLOYEE.add_employee(employee)
