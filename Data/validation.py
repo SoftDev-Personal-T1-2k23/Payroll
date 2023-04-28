@@ -75,7 +75,10 @@ class Validation():
         # Attempt to match regex pattern & return result
         match = re.fullmatch(regex, val)
         validation_success = match is not None
-        return validation_success
+        if validation_success:
+            return True
+        else:
+            return VALIDATION_ERROR_MESSAGE[field_title] % field_title
 
 
 if __name__ == "__main__":
