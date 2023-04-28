@@ -1,1 +1,1 @@
-from . import PageConstructor_login, PageConstructor_home, PageConstructor_export, PageConstructor_search, PageConstructor_view, PageConstructor_edit, PageConstructor_change
+from . import PageConstructor_login, PageConstructor_home, PageConstructor_export, PageConstructor_search, PageConstructor_view, PageConstructor_edit, PageConstructor_change, PageConstructor_add

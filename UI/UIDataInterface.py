@@ -127,7 +127,12 @@ class UIDataInterface:
         """
         # Return the target employee
         return Payroll.USER if Payroll.TARGET_EMPLOYEE is None else Payroll.TARGET_EMPLOYEE
-    
+    def make_new_employee(self, emp_info:dict):
+        """Creates space for a new employee
+
+            
+        """
+        Payroll.make_new_employee(emp_info)
     def set_target_employee(self, employee=None) -> bool:
         """Sets the payroll's target employee
             Params:

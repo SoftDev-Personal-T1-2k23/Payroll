@@ -39,6 +39,12 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
     import_export_btn = ttk.Button(button_frame, text="Export", width=BUTTON_WIDTH, command=lambda: page_ctrl.open_page("export"))
     ttc.add_tooltip(import_export_btn, "home_impexp_button", (-170, 0), ("Export Page", "Export employee information"))
 
+    udi = ui_core.ui_data_interface
+    user_access_level = udi.get_access_level()
+    if user_access_level == "administrator":
+        add_employee_button = ttk.Button(button_frame, text="Add", width=BUTTON_WIDTH, command=lambda: page_ctrl.open_page("add"))
+        ttc.add_tooltip(import_export_btn, "home_add_button", (-180, 0), ("Add Page", "Add employee"))
+
     # Add a logout button -> login page
     bottom_frame = ttk.Frame(base_frame, height=50)
     logout_btn = ttk.Button(bottom_frame, text="Logout", command=attempt_logout)
@@ -57,6 +63,8 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
     edit_btn.pack(expand=TRUE)
     view_btn.pack(expand=TRUE)
     import_export_btn.pack(expand=TRUE)
+    if user_access_level == "administrator":
+        add_employee_button.pack(expand = TRUE)
     #
     bottom_frame.pack(side=LEFT)
     logout_btn.pack(side=LEFT)

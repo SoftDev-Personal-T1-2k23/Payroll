@@ -5,6 +5,8 @@ from Data.FileConstants import DIR_ROOT, PATH_EMPLOYEE_DATA
 from Data.file_reader import FileReader
 from Data.FileWriter import FileWriter
 from Data.Database import Database, EMPLOYEES
+from Data.Employee import Employee
+import csv
 
 USER = None
 TARGET_EMPLOYEE = None #this is to keep track of what the view and edit pages should display
@@ -171,7 +173,42 @@ def save_info(field_data):
     # df.to_csv('employees.csv', index=False)
 
 
+def make_new_employee(emp_info:dict):
+    
+    
+    # print(emp_info)
+    row = [0]*(len(emp_info) - 1)#minus one because there are two spots in the dictionary for name but only one spot in the csv
+    csv_data = FileReader.read_csv(PATH_EMPLOYEE_DATA)
+    name = ""
+    for (label, value) in emp_info:
+        
+        if label == "FirstName":
+            name += value + " "
+        elif label == "LastName":
+            name += value
+            col_index = csv_data.get_column_index("Name") # It's zero, but this is prob safer
+            row[col_index] = name
+        else:
+            col_index = csv_data.get_column_index(label) # It's zero, but this is prob safer
+            row[col_index] = value
+    # print(row)
+    #create new slot in csv
+    with open('employees.csv', mode='a', newline='') as file:
+        # create a writer object
+        writer = csv.writer(file)
 
+    # fill it with information
+    writer.writerow(row)
+    #generate employee using that info
+    
+    employee = Employee(csv_data.columns, row)
+    # set target employee to that
+    EMPLOYEE.add_employee(employee)
+
+
+    # EMPLOYEES.employees
+
+    
 #helper function for getting the id of a user via the first name
 def get_id(employees, user):
     for key in employees:
