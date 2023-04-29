@@ -73,7 +73,7 @@ class Employee:
 
         name_components = data_values[column_titles.index("Name")].split(" ")
         self.data["FirstName"] = name_components[0]
-        self.data["LastName"] = name_components[1]
+        self.data["LastName"] = name_components[-1]
 
         # Setup employee fields
         self.classification = None

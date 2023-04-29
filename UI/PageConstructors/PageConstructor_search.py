@@ -7,19 +7,41 @@ from UI.tooltip_controller import TooltipController
 
 from .PageConstructor_view import constructor as construct_view
 BUTTON_WIDTH = 20
+FILTER_COND_LOOKUP = { # Conditions
+    ">0K": lambda x: float(x)>=0,
+    ">25K": lambda x: float(x)>=25E3,
+    ">50K": lambda x: float(x)>=50E3,
+    ">75K": lambda x: float(x)>=75E3,
+    ">100K": lambda x: float(x)>=100E3,
+}
+
+FILTER_TRANS_LOOKUP = { # Translations
+    "Employee": "employee",
+    "Admin": "administrator",
+    "True": "1",
+    "False": "0"
+}
+FILTER_OPTIONS = {
+    "Privilege": ["N/A", "Employee", "Admin"],
+    "Salary": ["N/A", ">0K", ">25K", ">50K", ">75K", ">100K"], # Actual use >= and <=, but > and < are simple
+    "IsArchived": ["N/A", "True", "False"]
+}
 
 last_search_text = None # last search text; used for backward page navigation
 current_search_results = None # Current search results
+current_search_by = None # Current search by
+current_filters = {} # Current filters
 
 #make a list to keep track of what employees need to be displayed
 display_list = []
 
 def constructor(ui_core, ttc:TooltipController, cache, page_data):
     udi = ui_core.ui_data_interface
+    user_is_admin = udi.get_access_level() == "administrator"
 
+    search_by_var = StringVar()
     search_entry_var = StringVar()
-    filter0_var = StringVar()
-    filter1_var = StringVar()
+    filter_vars = {} # Populated with filter option keys and StringVar values
     # Split the page into necessary panels
 
     base_frame = ttk.Frame(ui_core.root, padding=15)
@@ -28,46 +50,64 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
     top_frame = ttk.Frame(base_frame)
     title = ttk.Label(top_frame, text="Employee Search", style="Bold.TLabel")
 
-
+    SEARCH_BY_OPTIONS = [
+        "LastName", "ID", "Email"
+    ]
+    def search_by_changed(*args):
+        global current_search_by
+        current_search_by = search_by_var.get()
     # Add a search entry and search button
     def perform_basic_search(*args, search_text=None):
         s_text = search_entry_var.get() if search_text is None else search_text
         search(s_text, results_frame, results_scroll, ui_core)
     search_frame = ttk.Frame(top_frame, height=30)
+    global current_search_by
+    selected_search_by_option = current_search_by or SEARCH_BY_OPTIONS[0]
+    current_search_by = selected_search_by_option # Prevents an error for None search_by option
+    search_by = ttk.OptionMenu(search_frame, search_by_var, selected_search_by_option, *SEARCH_BY_OPTIONS)
+    search_by.config(width=10)
+    search_by_var.trace("w", search_by_changed)
     search_btn = ttk.Button(search_frame, text="Search", command=perform_basic_search)
     search_entry = ttk.Entry(search_frame, width=50, textvariable=search_entry_var)
     search_entry_var.trace("w", perform_basic_search)
 
     # Add search filter options
-    #       (employee last name, employee id, employee department id, etc.)
-    # Add necessary tooltips
-    filter_frame = ttk.Frame(top_frame, height=30)
 
+    base_filter_frame = ttk.Frame(top_frame, height=30)
+    
+    def get_longest_filter_option(filter_options):
+        #calculate what the longest item in the menu is so the width can be consistent
+        longest_option = max(filter_options, key=len)
+        longest_option_width = len(longest_option)
+        return longest_option_width+1
+    results_frame = None
+    def filter_var_updated(filter_option_title, filter_var):
+        global current_filters
+        current_filters[filter_option_title] = filter_var
+        if results_frame is None: return
+        perform_basic_search(search_text=last_search_text)
 
+    global current_filters
+    for (filter_option_title, filter_options) in FILTER_OPTIONS.items():
+        if filter_option_title == "IsArchived" and not user_is_admin: continue
 
-    FILTER0_OPTIONS = ["These", "are", "all", "valid", "options"]
+        filter_var = StringVar()
+        filter_vars[filter_option_title] = filter_var
+        filter_var.trace("w", lambda a,b,c,fv=filter_var: filter_var_updated(filter_option_title, fv))
 
-    #calculate what the longest item in the menu is so the width can be consistent
-    longest_option = max(FILTER0_OPTIONS, key=len)
-    longest_option_width = len(longest_option)
+        filter_frame = ttk.Frame(base_filter_frame, width=20)
+        filter_label = ttk.Label(filter_frame, text=f"{filter_option_title}:")
+        current_filter_choice = filter_options[0]
+        if filter_option_title in current_filters:
+            current_filter_choice = current_filters[filter_option_title].get()
+        filter_menu = ttk.OptionMenu(filter_frame, filter_var, current_filter_choice, *filter_options)
+        #set fixed width to options menu
+        filter_menu.config(width=get_longest_filter_option(filter_options))
 
-    filter0_frame = ttk.Frame(filter_frame, width=20)
-    filter0_label = ttk.Label(filter0_frame, text="Filter0:")
-    filter0_menu = ttk.OptionMenu(filter0_frame, filter0_var, FILTER0_OPTIONS[0], *FILTER0_OPTIONS)
-    #set fixed width to options menu
-    filter0_menu.config(width=longest_option_width)
+        filter_frame.pack(side=LEFT, padx=(0,5))
+        filter_label.pack(side=LEFT, expand=TRUE)
+        filter_menu.pack(side=LEFT, expand=TRUE)
 
-
-    FILTER1_OPTIONS = ["Some", "helpful", "search", "filters"]
-
-    #calculate what the longest item in the menu is so the width can be consistent
-    longest_option = max(FILTER1_OPTIONS, key=len)
-    longest_option_width = len(longest_option)
-
-    filter1_frame = ttk.Frame(filter_frame, width=20)
-    filter1_label = ttk.Label(filter1_frame, text="Filter1:")
-    filter1_menu = ttk.OptionMenu(filter1_frame, filter1_var, FILTER1_OPTIONS[0], *FILTER1_OPTIONS)
-    filter1_menu.config(width=longest_option_width)
 
     middle_frame = ttk.Frame(base_frame)
     results_frame = ttk.Frame(middle_frame, width=400, height=300, style="Indent.TFrame")
@@ -92,18 +132,11 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
     title.pack(expand=TRUE)
 
     search_frame.pack(side=TOP, fill=X, padx=(0,50), pady=(5,5))
+    search_by.pack(side=LEFT)
     search_btn.pack(side=LEFT, expand=TRUE)
     search_entry.pack(side=LEFT, expand=TRUE)
 
-    filter_frame.pack(side=TOP, fill=X)
-
-    filter0_frame.pack(side=LEFT, padx=(0,5))
-    filter0_label.pack(side=LEFT, expand=TRUE)
-    filter0_menu.pack(side=LEFT, expand=TRUE)
-
-    filter1_frame.pack(side=LEFT)
-    filter1_label.pack(side=LEFT, expand=TRUE)
-    filter1_menu.pack(side=LEFT, expand=TRUE)
+    base_filter_frame.pack(side=TOP, fill=X)
 
     middle_frame.pack(side=TOP, expand=TRUE, fill=BOTH)
     results_frame.pack(side=TOP, expand=TRUE, pady=(10,0))
@@ -137,26 +170,65 @@ def search(search_text, results_frame, results_scroll, ui_core):
     for child in results_frame.winfo_children():
         child.destroy()
 
+    def add_emp(emp):
+        if emp in emp_list: return False
+        emp_list.append(emp)
+        return True
 
-    #end the function if there is nothing to search
-    if search_text == "":
-        return None
-
-    IGNORED_FIELDS = [
-        "Password"
-    ]
-    #loop through the dictionary of employees
+    #Apply filters, if any
+    global current_filters
+    applied_search_filters = False
     for id in employees:
-        #get the individual employee object
         emp = employees[id]
-        #loop through the persons attributes
-        for (field_name, field_value) in emp.data.items():
-            if field_name in IGNORED_FIELDS: continue
+        
+        for (filter_title, filter_val) in current_filters.items():
+            filter_val = filter_val.get()
+            if filter_val == "N/A":
+                continue # Ignore N/A filters
+            else:
+                applied_search_filters = True
+            if filter_val in FILTER_TRANS_LOOKUP: # Translate filter_value
+                filter_val = FILTER_TRANS_LOOKUP[filter_val]
+            emp_val = emp.data[filter_title]
 
-            #if the users query appears in the field we are looking at add the employee to the list
-            if search_text in str(field_value).lower():
-                if emp in emp_list: continue
-                emp_list.append(emp)
+            if filter_val in FILTER_COND_LOOKUP:
+                filter_cond_success = False
+                try:
+                    filter_cond_success = FILTER_COND_LOOKUP[filter_val](emp_val)
+                except:
+                    pass
+                if filter_cond_success:
+                    add_emp(emp)
+                    continue
+
+            if filter_title == "Privilege" or filter_title == "IsArchived":
+                if emp_val == filter_val:
+                    add_emp(emp)
+
+    if search_text != "":
+        IGNORED_FIELDS = [
+            "Password"
+        ]
+        #loop through the dictionary of employees
+        for id in employees:
+            #get the individual employee object
+            emp = employees[id]
+            #filter irrelevant employees by search_by value
+            search_by_emp_val = str(emp.data[current_search_by]).lower()[:len(search_text)]
+            if not search_text in search_by_emp_val:
+                if emp in emp_list:
+                    emp_list.remove(emp)
+                continue
+
+            if applied_search_filters: continue
+
+            #loop through the persons attributes
+            for (field_name, field_value) in emp.data.items():
+                if field_name in IGNORED_FIELDS: continue
+
+                #if the users query appears in the field we are looking at add the employee to the list
+                if search_text in str(field_value).lower():
+                    add_emp(emp)
 
     #make the entries
     def view_employee_data(emp):
