@@ -81,20 +81,29 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
         longest_option_width = len(longest_option)
         return longest_option_width+1
     results_frame = None
-    def filter_var_updated(filter_option_title, filter_var):
+    filters_vars = {
+        "Privilege": StringVar(),
+        "Salary": StringVar(),
+        "IsArchived": StringVar()
+    }
+    print(filter_vars)
+    def filter_var_updated(filter_option_title, filter_title):
+        filter_var = filter_vars[filter_title]
         global current_filters
         current_filters[filter_option_title] = filter_var
+        print("updated", filter_var)
         if results_frame is None: return
         perform_basic_search(search_text=last_search_text)
+    filters_vars["Privilege"].trace("w", lambda a,b,c: filter_var_updated(filter_option_title, "Privilege"))
+    filters_vars["Salary"].trace("w", lambda a,b,c: filter_var_updated(filter_option_title, "Salary"))
+    filters_vars["IsArchived"].trace("w", lambda a,b,c: filter_var_updated(filter_option_title, "IsArchived"))
 
     global current_filters
+    i = 0
     for (filter_option_title, filter_options) in FILTER_OPTIONS.items():
         if filter_option_title == "IsArchived" and not user_is_admin: continue
-
-        filter_var = StringVar()
-        filter_vars[filter_option_title] = filter_var
-        filter_var.trace("w", lambda a,b,c,fv=filter_var: filter_var_updated(filter_option_title, fv))
-
+        print(filter_vars, filter_vars.keys(), filter_option_title, "Privilege")
+        filter_var = filter_vars[filter_option_title]
         filter_frame = ttk.Frame(base_filter_frame, width=20)
         filter_label = ttk.Label(filter_frame, text=f"{filter_option_title}:")
         current_filter_choice = filter_options[0]
@@ -107,7 +116,8 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
         filter_frame.pack(side=LEFT, padx=(0,5))
         filter_label.pack(side=LEFT, expand=TRUE)
         filter_menu.pack(side=LEFT, expand=TRUE)
-
+        i += 1
+    print(filter_vars)
 
     middle_frame = ttk.Frame(base_frame)
     results_frame = ttk.Frame(middle_frame, width=400, height=300, style="Indent.TFrame")
@@ -174,19 +184,47 @@ def search(search_text, results_frame, results_scroll, ui_core):
         if emp in emp_list: return False
         emp_list.append(emp)
         return True
-
-    #Apply filters, if any
-    global current_filters
-    applied_search_filters = False
+    
+    # Add employees based on search text
+    IGNORED_FIELDS = [
+        "Password"
+    ]
+    # Get set to filter
     for id in employees:
+        #get the individual employee object
+        emp = employees[id]
+        #Find employees that match
+        search_by_emp_val = str(emp.data[current_search_by]).lower()[:len(search_text)]
+        if search_text == search_by_emp_val: # Remove employees that don't match search text
+            emp_list.append(emp)
+            continue
+        #loop through the persons attributes
+        # for (field_name, field_value) in emp.data.items():
+        #     if field_name in IGNORED_FIELDS: continue
+
+        #     #if the users query appears in the field we are looking at add the employee to the list
+        #     if search_text in str(field_value).lower():
+        #         add_emp(emp)
+    
+    if search_text == "":
+        emp_list = [emp for emp in employees.values()]
+
+    #Get filter subsets, if any
+    global current_filters
+    print("CURR",[s.get() for s in current_filters.values()])
+    filter_subsets = {}
+    for emp in emp_list:
         emp = employees[id]
         
         for (filter_title, filter_val) in current_filters.items():
             filter_val = filter_val.get()
+
+            filter_emp = [] # Setup filter list
             if filter_val == "N/A":
                 continue # Ignore N/A filters
             else:
-                applied_search_filters = True
+                filter_subsets[filter_title] = filter_emp
+            
             if filter_val in FILTER_TRANS_LOOKUP: # Translate filter_value
                 filter_val = FILTER_TRANS_LOOKUP[filter_val]
             emp_val = emp.data[filter_title]
@@ -198,37 +236,26 @@ def search(search_text, results_frame, results_scroll, ui_core):
                 except:
                     pass
                 if filter_cond_success:
-                    add_emp(emp)
-                    continue
+                    filter_emp.append(emp)
+                    break
 
             if filter_title == "Privilege" or filter_title == "IsArchived":
                 if emp_val == filter_val:
-                    add_emp(emp)
+                    filter_emp.append(emp)
+                    break
+    # get union of all sets
+    def get_set_intersection(s0, s1):
+        s2 = []
+        for v in s0:
+            if v in s1:
+                s2.append(v)
+        return s2
+    print(filter_subsets.items())
+    final_emps = emp_list
+    for (filter_title, filter_emps) in filter_subsets.items():
+        final_emps = get_set_intersection(final_emps, filter_emps)
+    print("FIN:", final_emps)
 
-    if search_text != "":
-        IGNORED_FIELDS = [
-            "Password"
-        ]
-        #loop through the dictionary of employees
-        for id in employees:
-            #get the individual employee object
-            emp = employees[id]
-            #filter irrelevant employees by search_by value
-            search_by_emp_val = str(emp.data[current_search_by]).lower()[:len(search_text)]
-            if not search_text in search_by_emp_val:
-                if emp in emp_list:
-                    emp_list.remove(emp)
-                continue
-
-            if applied_search_filters: continue
-
-            #loop through the persons attributes
-            for (field_name, field_value) in emp.data.items():
-                if field_name in IGNORED_FIELDS: continue
-
-                #if the users query appears in the field we are looking at add the employee to the list
-                if search_text in str(field_value).lower():
-                    add_emp(emp)
 
     #make the entries
     def view_employee_data(emp):
@@ -255,7 +282,7 @@ def search(search_text, results_frame, results_scroll, ui_core):
     global current_search_results
     current_search_results = []
     row = 0
-    for emp in emp_list:
+    for emp in final_emps:
         is_archived = emp.data["IsArchived"] == "1"
         if is_archived and not user_is_admin: continue
 
