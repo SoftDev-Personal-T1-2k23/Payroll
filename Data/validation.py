@@ -23,12 +23,16 @@ VALIDATION_REGEX = {
     "Phone": r"^\d{3}\-\d{3}\-\d{4}",
     "JobTitle": r"^.*\w.*",
     "IsArchived": r"^\d",
+    "SSN": r"^\d{3}-\d{2}-\d{4}",
+    "TerminationDate": r"^\d{1,2}\/\d{1,2}\/(\d{4}|\d{2})",
+    "ArchivalDate": r"^\d{1,2}\/\d{1,2}\/(\d{4}|\d{2})",
 }
 VALIDATION_ERROR_LOOKUP = {
     "only_digits": "%s may only include numbers.",
     "no_digits": "%s must not include numbers",
     "one_digit": "%s must include a single digit.",
     "at_least_single_char": "%s must include at least one letter or number.",
+    "date": "%s must use digits and backslashes. Year must be 2 or 4 digits. Format: 00/00/00",
 }
 VERR = VALIDATION_ERROR_LOOKUP
 VALIDATION_ERROR_MESSAGE = {
@@ -46,13 +50,16 @@ VALIDATION_ERROR_MESSAGE = {
     "Route": "%s number must end with a dash followed by a digit or 'K'",
     "Account": "%s number must be 6 digits followed by a dash and 4 digits.",
     #Password skipped
-    "StartDate": "%s must use digits and backslashes. Year must be 2 or 4 digits.",
+    "StartDate": "%s must use digits and backslashes. Year must be 2 or 4 digits. Format: 00/00/00",
     "Privilege": "%s must be 'employee' or 'administrator'.",
     "Department": VERR["at_least_single_char"],
     "Email": "%s must of of the format: valid@domain.com",
     "Phone": "%s number must be of the format: 000-000-0000",
     "JobTitle": VERR["at_least_single_char"],
-    "IsArchived": VERR["one_digit"]
+    "IsArchived": VERR["one_digit"],
+    "SSN": "%s must be of the format: 000-00-0000",
+    "TerminationDate": VERR["date"],
+    "ArchivalDate": VERR["date"],
 }
 
 class Validation():
