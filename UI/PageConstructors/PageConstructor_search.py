@@ -236,6 +236,12 @@ def search(search_text, results_frame, results_scroll, ui_core):
         last_search_text = search_text
         udi.set_target_employee(emp)
         ui_core.page_controller.open_page("view")
+
+    def edit_employee_data(emp):
+        global last_search_text
+        last_search_text = search_text
+        udi.set_target_employee(emp)
+        ui_core.page_controller.open_page("edit")
     
     def archive_employee(emp):
         udi.archive_employee(emp)
@@ -266,6 +272,9 @@ def search(search_text, results_frame, results_scroll, ui_core):
         label_emp_name = ttk.Label(frame_emp_name, text=emp.data["Name"])
         content_frame = ttk.Frame(frame)
         btn_view = ttk.Button(content_frame, text="View", command=lambda e=emp: view_employee_data(e))
+        btn_edit = None
+        if user_is_admin:
+            btn_edit = ttk.Button(content_frame, text="Edit", command=lambda e=emp: edit_employee_data(e))
         btn_archive = None
         if user_is_admin and not is_archived:
             btn_archive = ttk.Button(content_frame, text="Archive", command=lambda e=emp: archive_employee(e))
@@ -288,6 +297,8 @@ def search(search_text, results_frame, results_scroll, ui_core):
         label_emp_name.pack(padx=(0,10))
         content_frame.pack(side=LEFT, expand=TRUE, fill=X)
         btn_view.pack(side=RIGHT)
+        if btn_edit is not None:
+            btn_edit.pack(side=RIGHT)
         if btn_archive is not None:
             btn_archive.pack(side=RIGHT)
         if btn_unarchive is not None:
