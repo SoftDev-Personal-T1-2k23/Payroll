@@ -24,10 +24,16 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
 
     header_frame = ttk.Frame(top_frame, height=30)
 
+    def export_csv():
+        if employee is None: return
+        udi.export_csv("export", [employee])
+    def export_paylog():
+        if employee is None: return
+        udi.export_pay_report([employee])
     #get the user object saved in the payroll file 
     emp_title = ttk.Label(header_frame, text= employee.data["FirstName"] + " " + employee.data["LastName"] , style="Indent.TLabel")
-    pay_report_btn = ttk.Button(header_frame, text="Generate Pay Report")
-    csv_btn = ttk.Button(header_frame, text="Export CSV")
+    pay_report_btn = ttk.Button(header_frame, text="Generate Pay Report", command=export_paylog)
+    csv_btn = ttk.Button(header_frame, text="Export CSV", command=export_csv)
 
     # Add panels the user has access to:
     #       General emp. info, Personal emp. info, and Sensitive emp. info

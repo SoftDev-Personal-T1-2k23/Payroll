@@ -3,7 +3,7 @@ import os
 import Data.Payroll as Payroll
 from Data.Database import EMPLOYEES
 from Data.FileWriter import FileWriter
-from Data.FileConstants import DIR_ROOT
+from Data.FileConstants import DIR_ROOT, PATH_PAYLOG
 from Data.csv_data import CSVData
 from Data.Employee import Employee
 
@@ -273,6 +273,16 @@ class UIDataInterface:
         FileWriter.write_csv(export_path, csv_data)
         # Return whether the process was successful
         return True
+    
+    def export_pay_report(self, employees):
+        """Write and compute pay reports for provided employees
+        
+            Params:
+                employees: The list of employees to pay and log pay reports for
+            Returns:
+                success: Operation success or failure (bool)
+        """
+        return FileWriter.write_pay_report(PATH_PAYLOG, employees)
 
     def set_new_password(self, employee, password:str) -> bool:
         """Set a user's new password

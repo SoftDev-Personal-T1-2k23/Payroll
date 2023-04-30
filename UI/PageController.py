@@ -54,6 +54,11 @@ class PageController:
         # If there was no previous page then return.
         if not self.prev_page: return
 
+        # If the prev page is the edit page, then we go back to the home page
+        if self.prev_page.id == "edit":
+            self.open_page("home")
+            return
+
         # Setup and load the previous page's cached data
         self.prev_page, self.page = self.page, self.prev_page
         self.prev_page_data, self.page_data = self.page_data, self.prev_page_data

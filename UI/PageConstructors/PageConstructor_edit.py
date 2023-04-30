@@ -23,8 +23,8 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
     header_frame = ttk.Frame(top_frame, height=30)
 
     emp_title = ttk.Label(header_frame, text=target_employee.data["FirstName"] + " " + target_employee.data["LastName"], style="Indent.TLabel")
-    pay_report_btn = ttk.Button(header_frame, text="Generate Pay Report")
-    csv_btn = ttk.Button(header_frame, text="Export CSV")
+    # pay_report_btn = ttk.Button(header_frame, text="Generate Pay Report")
+    # csv_btn = ttk.Button(header_frame, text="Export CSV")
 
     # Add panels the user has access to:
     #       General emp. info, Personal emp. info, and Sensitive emp. info
@@ -173,8 +173,8 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
 
     header_frame.pack(side=TOP, fill=X, expand=TRUE, padx=(0,50), pady=(5,5))
     emp_title.pack(side=LEFT, padx=(0,50))
-    pay_report_btn.pack(side=LEFT, padx=(50, 0))
-    csv_btn.pack(side=LEFT)
+    # pay_report_btn.pack(side=LEFT, padx=(50, 0))
+    # csv_btn.pack(side=LEFT)
 
     middle_frame.pack(side=TOP, expand=TRUE, fill=BOTH)
     public_frame.pack(side=TOP)
