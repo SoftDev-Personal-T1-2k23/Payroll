@@ -30,11 +30,11 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
     #       General emp. info, Personal emp. info, and Sensitive emp. info
     # Add necessary tooltips
     middle_frame = ttk.Frame(base_frame)
-    public_frame = ttk.Frame(middle_frame, width=400, height=120, style="Public.TFrame")
+    public_frame = ttk.Frame(middle_frame, width=400, height=100, style="Public.TFrame")
     public_frame.pack_propagate(False)
-    private_frame = ttk.Frame(middle_frame, width=400, height=120, style="Private.TFrame")
+    private_frame = ttk.Frame(middle_frame, width=400, height=160, style="Private.TFrame")
     private_frame.pack_propagate(False)
-    admin_frame = ttk.Frame(middle_frame, width=400, height=120, style="Admin.TFrame")
+    admin_frame = ttk.Frame(middle_frame, width=400, height=100, style="Admin.TFrame")
     admin_frame.pack_propagate(False)
 
     # Add a "to prev page" button (-> home page | search page) & other "ease of use" buttons

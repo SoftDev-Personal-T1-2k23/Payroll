@@ -35,10 +35,14 @@ class PageController:
         self.page_data = None
         self.prev_page = None
         self.prev_page_data = None
+        self.pprev_page = None
+        self.pprev_page_data = None
 
     def store_current_page(self) ->None:
         """Store the current page's data"""
         # Store the current page fields in the previous page fields
+        self.pprev_page = self.prev_page
+        self.pprev_page_data = self.prev_page_data
         self.prev_page = self.page
         self.prev_page_data = self.page_data
         # Clear the current page fields
@@ -56,7 +60,10 @@ class PageController:
 
         # If the prev page is the edit page, then we go back to the home page
         if self.prev_page.id == "edit":
-            self.open_page("home")
+            if self.pprev_page.id == "search":
+                self.open_page("search")
+            elif self.pprev_page.id == "home":
+                self.open_page("home")
             return
 
         # Setup and load the previous page's cached data
