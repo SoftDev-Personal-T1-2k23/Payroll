@@ -4,6 +4,8 @@ import re
 VALIDATION_REGEX = {
     "ID": r"^\d+",
     "Name": r"^([a-zA-Z]+\s([a-zA-Z]+\.*\s)*[a-zA-Z]+)",
+    "FirstName": r"(^[a-zA-Z]+$)",
+    "LastName": r"(^[a-zA-Z]+$)",
     "Address": r"^\d+\s([a-zA-Z]\s)+",
     "City": r"^\D+",
     "State": r"^[A-Z]{2}",
@@ -34,6 +36,8 @@ VERR = VALIDATION_ERROR_LOOKUP
 VALIDATION_ERROR_MESSAGE = {
     "ID": VERR["only_digits"],
     "Name": "%s must contain both the first and last name.",
+    "FirstName": "%s must contain only letters",
+    "LastName": "%s must contain only letters",
     "Address": "%s must be of the format: '0000 Street Name'",
     "City": VERR["no_digits"],
     "State": "%s must be composed of two capital letters.",
@@ -44,13 +48,13 @@ VALIDATION_ERROR_MESSAGE = {
     "Hourly": VERR["only_digits"],
     "Commission": VERR["only_digits"],
     "Route": "%s number must end with a dash followed by a digit or 'K'",
-    "Account": "%s number must be 6 digits followed by a dash and 4 digits.",
+    "Account": "%s format: ######-####",
     #Password skipped
-    "StartDate": "%s must use digits and backslashes. Year must be 2 or 4 digits.",
+    "StartDate": "%s format: ##/##/####",
     "Privilege": "%s must be 'employee' or 'administrator'.",
     "Department": VERR["at_least_single_char"],
-    "Email": "%s must of of the format: valid@domain.com",
-    "Phone": "%s number must be of the format: 000-000-0000",
+    "Email": "%s format: valid@domain.com",
+    "Phone": "%s format: 000-000-0000",
     "JobTitle": VERR["at_least_single_char"],
     "IsArchived": VERR["one_digit"]
 }

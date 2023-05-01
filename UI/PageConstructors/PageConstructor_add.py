@@ -5,6 +5,7 @@ import tkinter as tk
 from tkinter import *
 from tkinter import ttk
 from UI.tooltip_controller import TooltipController
+from Data.validation import Validation
 BUTTON_WIDTH = 20
 
 def constructor(ui_core, ttc:TooltipController, cache, page_data):
@@ -76,6 +77,7 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
         "admin": []
     }
     # Generate columns
+    # Generate columns
     for key in field_columns.keys():
         for _ in range(COLUMN_COUNT):
             parent_frame = field_column_parent_lookup[key]
@@ -101,7 +103,8 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
             field_value = field_data[1]
 
             column_parent = columns[column_index]
-            
+            # print("columns: ", columns)
+            # Create the frame for the field
             frame_field = ttk.Frame(column_parent, style=frame_priv_style)
             label_title = ttk.Label(frame_field, text=field_name, style=field_title_priv_style)
             label_value = ttk.Entry(frame_field, style=field_entry_priv_style)
@@ -111,32 +114,66 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
             label_title.pack(side=LEFT, fill=X)
             label_value.pack(side=RIGHT, fill=X)
 
-            field_entry_pairs.append((field_name, label_value))
+            # Create the frame for the message
+            frame_message = ttk.Frame(column_parent)
+            label_message = ttk.Label(frame_message)
+            
+
+            frame_message.pack(side=TOP, fill=X)
+            label_message.pack(side=LEFT, fill=X)
+
+            field_entry_pairs.append((field_name, label_value, label_message))
 
             column_index += 1
             column_index %= COLUMN_COUNT
 
 
 
-    #Create change password button
-    change_btn = ttk.Button(admin_frame, text="change password", width=BUTTON_WIDTH, command=lambda: ui_core.page_controller.open_page("change"))
-
-    # change_btn.grid(column=1, row=target_row, padx=5, pady=5)
+    success = ttk.Label(middle_frame)
+   
+    errors = []
+    error = ""
+    def show_save_success():
+        success.configure(text="Employee Added. Save successful")
+    
     # # Create Save button
     def save_employee_data():
+        errors.clear()
         # print(target_employee)
         # udi.set_target_employee(target_employee)
-        info_list = [(pair[0], pair[1].get()) for pair in field_entry_pairs]
-        udi.validate_entries(info_list)
-        # udi.make_new_employee([(pair[0], pair[1].get()) for pair in field_entry_pairs])
+        info_list = [(pair[0], pair[1].get(), pair[2]) for pair in field_entry_pairs]
+        # udi.validate_entries(info_list)
+        validator = Validation()
+        
+        for pair in info_list:
+            print(pair[0], pair[1])
+            error =  validator.validate_field(pair[0], pair[1])
+
+            
+
+            if error != True:
+                errors.append(error)
+                pair[2].configure(text=error)
+            else:
+                pair[2].configure(text="")
+                
+        
+        # print(errors) 
+        if len(errors) == 0:
+            show_save_success()
+            udi.make_new_employee([(pair[0], pair[1].get()) for pair in field_entry_pairs])
         # udi.update_employee_info([(pair[0], pair[1].get()) for pair in field_entry_pairs])
+    # save_failed_text:ttk.Label = None
     
-    save_btn = ttk.Button(middle_frame, text="Save", command=save_employee_data)
-    # # save_button.grid(column=1, row=2, padx=5, pady=5)
+    success.pack(side=BOTTOM, fill=X, pady=(10,0))
+    save_btn = ttk.Button(middle_frame, text="Save", command = save_employee_data)
+    # save_button.grid(column=1, row=2, padx=5, pady=5)
 
     # Validate shown fields, if changed
     #TODO: Validate fields
-
+    
+    
+    # save_failed_text = ttk.Label(bottom_frame, text = error,  style="Error.TLabel")
 
     #position everything
     base_frame.pack(side=TOP, fill=BOTH, expand=TRUE)
@@ -153,11 +190,15 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
     public_frame.pack(side=TOP)
 
     private_frame.pack(side=TOP)
+    
     admin_frame.pack(side=TOP)
-    change_btn.pack(side=BOTTOM)
+    
 
     bottom_frame.pack(side=LEFT)
+    
     back_btn.pack(side=LEFT)
+    # save_failed_text.pack(pady=(10, 0))
+    # save_failed_text.after(10, lambda: save_failed_text.pack_forget())
     save_btn.pack(side=LEFT)
     # save_btn.pack(side=LEFT)
 
