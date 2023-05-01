@@ -12,6 +12,8 @@ USER = None
 TARGET_EMPLOYEE = None #this is to keep track of what the view and edit pages should display
 
 def hash_password(password):
+    assert(password is str)
+    # assert(password is not None)
     # Encode the password string as UTF-8 bytes
     password_bytes = password.encode('utf-8')
 
@@ -64,6 +66,10 @@ def initialize_passwords():
 
  #helper function for checking if an employee exists via the username
 def find_employee(employees, user):
+    # assert(employees is dict)
+    assert(employees is not None)
+    assert(user is not None)
+    if len(employees) == 0: return
     for key in employees:
         if user == employees[key].data["FirstName"]:
             return key
@@ -98,6 +104,8 @@ def save_info(field_data):
     takes a dictionary of entry objects as a parameter
     the dictionary contains field names and the associated entry for that field. 
     '''
+    assert(field_data is dict)
+    # assert(field_data is not None)
     # Get CSV data & Locate the target employee
     csv_data = FileReader.read_csv(PATH_EMPLOYEE_DATA)
     csv_row = None
@@ -174,8 +182,8 @@ def save_info(field_data):
 
 
 def make_new_employee(emp_info:dict):
-    
-    
+    assert(emp_info is dict)
+    # assert(emp_info is not None)
     # print(emp_info)
     row = [0]*(len(emp_info) - 1)#minus one because there are two spots in the dictionary for name but only one spot in the csv
     csv_data = FileReader.read_csv(PATH_EMPLOYEE_DATA)
@@ -211,6 +219,9 @@ def make_new_employee(emp_info:dict):
 
 #helper function for getting the id of a user via the first name
 def get_id(employees, user):
+    assert(employees is dict)
+    # assert(user is Employee)
+    assert(user is not None)
     for key in employees:
         if user == employees[key].data["FirstName"]:
             return key
@@ -218,6 +229,7 @@ def get_id(employees, user):
 
 #returns the row in the csv file where a users info is stored via the first name
 def get_row(employees, user):
+    assert(employees is dict)
     #created to help when saving the password and other data to the csv
     target_row = 0
     for key in employees:
@@ -228,6 +240,9 @@ def get_row(employees, user):
 
 def set_password(employee, new_pass):
     """Set a new password"""
+    assert(employee is dict)
+    assert(new_pass is str)
+
     hashed_pass = hash_password(new_pass)
 
     print("saving new password: ", hashed_pass)

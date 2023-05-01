@@ -42,6 +42,7 @@ DATA_PRESENTATION = {# Where to display what data
 
 def format_field_data(data):
     """Format data to match the presentation constant (DATA_PRESENTATION)"""
+    assert(data is not None)
     data_new = {
         "public": [],
         "private": [],
@@ -63,6 +64,9 @@ class Employee:
     def __init__(self, column_titles, data_values):
         # name_raw = data[1].split(' ')
         # name_join  = ''
+
+        assert(column_titles is list)
+        assert(data_values is list)
 
         # Setup employee data fields
         self.data = {} # Stores all CSV related data
@@ -160,6 +164,10 @@ class Employee:
 
     @staticmethod
     def set_classification(self, classification, salary = -1, commission = -1, hourly = -1):
+        assert(classification is not None)
+        assert(salary is int)
+        assert(commission is int)
+        assert(hourly is int)
         #sets the classification of the employee to the given classification class
         if salary == -1:
             salary = self.data["Salary"]
@@ -252,12 +260,16 @@ class Employee:
 
     def match_search(self, value, attribute):
         #checks to see if the employee has the given value for the given attribute
+        assert(value is not None)
+        assert(attribute is not None)
         #returns true even if the value is just a slice of the given attribute
         if value.lower() in self.quick_attribute[attribute].lower():
             return True
         return False
 
     def change(self, attribute, value):
+        assert(attribute is not None)
+        assert(value is not None)
         #changes the values of the given attributes in the quick_attribute template
         if type(self.quick_attribute[attribute]) == type(value):
             self.quick_attribute[attribute] = value

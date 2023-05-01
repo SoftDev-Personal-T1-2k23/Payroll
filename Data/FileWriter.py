@@ -14,6 +14,8 @@ class FileWriter():
             Returns:
                 success: Whether the data was successfully written
         """
+        assert(file_path is str)
+        assert(csv_data is CSVData)
         #TODO: Avoid overriding unchanged information
         # I suggest adjusting the CSVData class to keep track of changes
         try:
@@ -30,7 +32,7 @@ class FileWriter():
         return True
     
     @staticmethod
-    def write_pay_report(file_path:str, employees):
+    def write_pay_report(file_path:str, employees:list):
         """Write to the pay report what has been paid to employees
         
             Params:
@@ -39,6 +41,8 @@ class FileWriter():
             Returns:
                 success: Whether the data was successfully written
         """
+        assert(file_path is str)
+        assert(employees is list)
         try:
             todays_date = datetime.today().strftime("%m/%d/%Y")
             with open(file_path, mode='w') as f:

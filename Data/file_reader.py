@@ -14,6 +14,10 @@ class FileReader():
             Returns:
                 csv_data: Returns a CSVData object
         """
+        assert(file_path is str)
+        assert(delimiter is str)
+        assert(row_value_types is list)
+
         # Read CSV content
         csv_columns = None
         csv_rows = []
@@ -43,6 +47,9 @@ class FileReader():
             Returns:
                 casted_values: A list of casted values
         """
+        assert(values is list)
+        assert(value_types is list)
+
         val_count = len(values)
         val_type_count = len(value_types)
         if val_type_count < val_count:

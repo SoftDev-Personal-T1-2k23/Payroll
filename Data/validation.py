@@ -74,6 +74,9 @@ class Validation():
             Returns:
                 validation_result: success: True, failure: validation_error
         """
+        assert(field_title is str)
+        assert(field_value is str)
+        if not field_title in VALIDATION_REGEX: return "Failed to validate"
         # Get field regex
         regex = VALIDATION_REGEX[field_title]
         if not regex:

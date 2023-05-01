@@ -22,6 +22,7 @@ class Database:
 
     def update_employee(self, employee):
         """Update an employees info stored within the database"""
+        assert(employee is not None)
         # Load the CSV
         csv_data = FileReader.read_csv(PATH_EMPLOYEE_DATA)
         csv_id_column_index = csv_data.columns.index("ID")
@@ -40,10 +41,14 @@ class Database:
         FileWriter.write_csv(PATH_EMPLOYEE_DATA, csv_data)
 
     def add_employee(self, employee):
+        assert(employee is not None)
         #takes an employee object and adds it to the employees dictionary
         self.employees[employee.data["ID"]] = employee
 
     def change_employee(self, id, change_list, file = "employees.csv"):
+        assert(id is not None)
+        assert(change_list is not None)
+        assert(file is not None)
         #takes an id and attributes to change, stored in a list of tuples, then changes the values of said atributes for the target employee
         #tuples are comprised of the quick_atribute reference to the target attribute, then the value it will be changed to
         #this will change the csv document as well
@@ -53,6 +58,8 @@ class Database:
         employee.update(file)
 
     def find_employee(self, value, attribute = 'ID'):
+        assert(value is not None)
+        assert(attribute is not None)
         #takes an attribute to search by, then returns all employees who match the given value
         #defaults to a search by id
         if attribute == 'ID':
