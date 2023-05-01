@@ -1,5 +1,6 @@
 """An employee class and related employee classifications"""
 from abc import ABC, abstractmethod
+from datetime import datetime
 
 import Data.Payroll as Payroll
 
@@ -9,10 +10,10 @@ DATA_ACCESS_VIEW = {# Which privilege levels have access to view what data
     ],
     "private": [
         "Address", "City", "State", "Zip", "Route", "Account", "Email", "Phone", "ClassificationId", "Salary", "PayMethod",
-        "Commission", "Route", "Account", "Privilege"
+        "Commission", "Route", "Account", "Privilege", "SSN"
     ],
     "admin": [
-        "IsArchived"
+        "IsArchived", "TerminationDate", "ArchivalDate"
     ]
 }
 DATA_ACCESS_MODIFY = {# Which privlege levels have access to edit what data
@@ -22,7 +23,8 @@ DATA_ACCESS_MODIFY = {# Which privlege levels have access to edit what data
         "Commission", "Route", "Account"
     ],
     "admin": [
-        "FirstName", "LastName", "ID", "JobTitle", "StartDate", "Department", "Privilege", "IsArchived"
+        "FirstName", "LastName", "ID", "JobTitle", "StartDate", "Department", "Privilege", "IsArchived", "SSN",
+        "TerminationDate", "ArchivalDate"
     ]
 }
 DATA_PRESENTATION = {# Where to display what data
@@ -34,7 +36,7 @@ DATA_PRESENTATION = {# Where to display what data
         "Commission", "Route", "Account"
     ],
     "admin": [
-        "Privilege", "IsArchived"
+        "Privilege", "IsArchived", "SSN", "TerminationDate", "ArchivalDate"
     ]
 }
 
@@ -180,6 +182,7 @@ class Employee:
                 archival_success: Whether archival was successful
         """
         self.data["IsArchived"] = "1"
+        self.data["ArchivalDate"] = datetime.today().strftime("%m/%d/%Y")
         return True
 
     def unarchive(self):
@@ -189,6 +192,7 @@ class Employee:
                 unarchival_success: Whether unarchival was successful
         """
         self.data["IsArchived"] = "0"
+        self.data["ArchivalDate"] = "_"
         return True
 
     def get_viewable_field_data(self):
@@ -232,8 +236,19 @@ class Employee:
         return format_field_data(field_data)
 
     def issue_payment(self):
-        payment = self.classification.compute_payment()
-        return f'Mailing {payment} to {self.data["FirstName"]} {self.data["LastName"]} at {self.data["Address"]} {self.data["City"]} {self.data["State"]} {self.data["Zip"]}\n'
+        pay_amount = self.classification.compute_payment()
+        pay_class = self.classification.__class__
+        print(pay_class)
+
+        pay_msg = None
+        if pay_class == Salaried: # All are the same pay_msg, but we may have them differ in the future
+            pay_msg = f'Sent ${pay_amount:.2f} to {self.data["Name"]} at {self.data["Address"]} {self.data["City"]} {self.data["State"]} {self.data["Zip"]}'
+        elif pay_class == Commissioned:
+            pay_msg = f'Sent ${pay_amount:.2f} to {self.data["Name"]} at {self.data["Address"]} {self.data["City"]} {self.data["State"]} {self.data["Zip"]}'
+        elif pay_class == Hourly:
+            pay_msg = f'Sent ${pay_amount:.2f} to {self.data["Name"]} at {self.data["Address"]} {self.data["City"]} {self.data["State"]} {self.data["Zip"]}'
+
+        return pay_amount, pay_msg
 
     def match_search(self, value, attribute):
         #checks to see if the employee has the given value for the given attribute

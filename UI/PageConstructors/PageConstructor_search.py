@@ -113,11 +113,19 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
     results_frame = ttk.Frame(middle_frame, width=400, height=300, style="Indent.TFrame")
     results_frame.pack_propagate(False)
     results_scroll = ttk.Scrollbar(results_frame)
-    def export_search_results():
-        if current_search_results is None: return
-        udi.export_csv("export", current_search_results)
-    csv_btn = ttk.Button(middle_frame, text="Export CSV", width=BUTTON_WIDTH, command=export_search_results)
-    ttc.add_tooltip(csv_btn, "export_csv_btn", (-175, 0), ("Export CSV", "Export search results"))
+    
+    if user_is_admin:
+        def export_search_results():
+            if current_search_results is None: return
+            udi.export_csv("export", current_search_results)
+        csv_btn = ttk.Button(middle_frame, text="Export CSV", width=BUTTON_WIDTH, command=export_search_results)
+        ttc.add_tooltip(csv_btn, "export_csv_btn", (-100, 0), ("Export CSV", "Export search results"))
+        
+        def export_paylog():
+            if current_search_results is None: return
+            udi.export_pay_report(current_search_results)
+        paylog_btn = ttk.Button(middle_frame, text="Export Paylog", width=BUTTON_WIDTH, command=export_paylog)
+        ttc.add_tooltip(paylog_btn, "export_csv_btn", (-175, 0), ("Pay & Export to paylog", "Performs payments and logs to the paylog file"))
 
 
     # Add a "to home" button (-> home page) & other "ease of use" buttons
@@ -141,7 +149,9 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
     middle_frame.pack(side=TOP, expand=TRUE, fill=BOTH)
     results_frame.pack(side=TOP, expand=TRUE, pady=(10,0))
     results_scroll.pack(side=RIGHT, fill=Y)
-    csv_btn.pack(side=BOTTOM)
+    if user_is_admin:
+        csv_btn.pack(side=BOTTOM)
+        paylog_btn.pack(side=BOTTOM)
 
     bottom_frame.pack(side=LEFT)
     back_btn.pack(side=LEFT)
@@ -236,6 +246,12 @@ def search(search_text, results_frame, results_scroll, ui_core):
         last_search_text = search_text
         udi.set_target_employee(emp)
         ui_core.page_controller.open_page("view")
+
+    def edit_employee_data(emp):
+        global last_search_text
+        last_search_text = search_text
+        udi.set_target_employee(emp)
+        ui_core.page_controller.open_page("edit")
     
     def archive_employee(emp):
         udi.archive_employee(emp)
@@ -266,6 +282,9 @@ def search(search_text, results_frame, results_scroll, ui_core):
         label_emp_name = ttk.Label(frame_emp_name, text=emp.data["Name"])
         content_frame = ttk.Frame(frame)
         btn_view = ttk.Button(content_frame, text="View", command=lambda e=emp: view_employee_data(e))
+        btn_edit = None
+        if user_is_admin:
+            btn_edit = ttk.Button(content_frame, text="Edit", command=lambda e=emp: edit_employee_data(e))
         btn_archive = None
         if user_is_admin and not is_archived:
             btn_archive = ttk.Button(content_frame, text="Archive", command=lambda e=emp: archive_employee(e))
@@ -288,6 +307,8 @@ def search(search_text, results_frame, results_scroll, ui_core):
         label_emp_name.pack(padx=(0,10))
         content_frame.pack(side=LEFT, expand=TRUE, fill=X)
         btn_view.pack(side=RIGHT)
+        if btn_edit is not None:
+            btn_edit.pack(side=RIGHT)
         if btn_archive is not None:
             btn_archive.pack(side=RIGHT)
         if btn_unarchive is not None:

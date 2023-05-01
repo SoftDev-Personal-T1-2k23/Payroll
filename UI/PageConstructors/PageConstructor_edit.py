@@ -23,18 +23,18 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
     header_frame = ttk.Frame(top_frame, height=30)
 
     emp_title = ttk.Label(header_frame, text=target_employee.data["FirstName"] + " " + target_employee.data["LastName"], style="Indent.TLabel")
-    pay_report_btn = ttk.Button(header_frame, text="Generate Pay Report")
-    csv_btn = ttk.Button(header_frame, text="Export CSV")
+    # pay_report_btn = ttk.Button(header_frame, text="Generate Pay Report")
+    # csv_btn = ttk.Button(header_frame, text="Export CSV")
 
     # Add panels the user has access to:
     #       General emp. info, Personal emp. info, and Sensitive emp. info
     # Add necessary tooltips
     middle_frame = ttk.Frame(base_frame)
-    public_frame = ttk.Frame(middle_frame, width=400, height=120, style="Public.TFrame")
+    public_frame = ttk.Frame(middle_frame, width=400, height=100, style="Public.TFrame")
     public_frame.pack_propagate(False)
-    private_frame = ttk.Frame(middle_frame, width=400, height=120, style="Private.TFrame")
+    private_frame = ttk.Frame(middle_frame, width=400, height=160, style="Private.TFrame")
     private_frame.pack_propagate(False)
-    admin_frame = ttk.Frame(middle_frame, width=400, height=120, style="Admin.TFrame")
+    admin_frame = ttk.Frame(middle_frame, width=400, height=100, style="Admin.TFrame")
     admin_frame.pack_propagate(False)
 
     # Add a "to prev page" button (-> home page | search page) & other "ease of use" buttons
@@ -173,8 +173,8 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
 
     header_frame.pack(side=TOP, fill=X, expand=TRUE, padx=(0,50), pady=(5,5))
     emp_title.pack(side=LEFT, padx=(0,50))
-    pay_report_btn.pack(side=LEFT, padx=(50, 0))
-    csv_btn.pack(side=LEFT)
+    # pay_report_btn.pack(side=LEFT, padx=(50, 0))
+    # csv_btn.pack(side=LEFT)
 
     middle_frame.pack(side=TOP, expand=TRUE, fill=BOTH)
     public_frame.pack(side=TOP)

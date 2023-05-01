@@ -36,14 +36,14 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
     ttc.add_tooltip(edit_btn, "home_edit_button", (-175, 0), ("Edit Page", "Edit your employee information"))
     view_btn = ttk.Button(button_frame, text="View Information", width=BUTTON_WIDTH, command=lambda: open_employee_page("view"))#, payroll.USER))
     ttc.add_tooltip(view_btn, "home_view_button", (-178, 0), ("View Page", "View your employee information"))
-    import_export_btn = ttk.Button(button_frame, text="Export", width=BUTTON_WIDTH, command=lambda: page_ctrl.open_page("export"))
-    ttc.add_tooltip(import_export_btn, "home_impexp_button", (-170, 0), ("Export Page", "Export employee information"))
+    # import_export_btn = ttk.Button(button_frame, text="Export", width=BUTTON_WIDTH, command=lambda: page_ctrl.open_page("export"))
+    # ttc.add_tooltip(import_export_btn, "home_impexp_button", (-170, 0), ("Export Page", "Export employee information"))
 
     udi = ui_core.ui_data_interface
     user_access_level = udi.get_access_level()
     if user_access_level == "administrator":
         add_employee_button = ttk.Button(button_frame, text="Add", width=BUTTON_WIDTH, command=lambda: page_ctrl.open_page("add"))
-        ttc.add_tooltip(import_export_btn, "home_add_button", (-180, 0), ("Add Page", "Add employee"))
+        ttc.add_tooltip(add_employee_button, "home_add_button", (-180, 0), ("Add Page", "Add an employee"))
 
     # Add a logout button -> login page
     bottom_frame = ttk.Frame(base_frame, height=50)
@@ -62,7 +62,7 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
     search_btn.pack(expand=TRUE)
     edit_btn.pack(expand=TRUE)
     view_btn.pack(expand=TRUE)
-    import_export_btn.pack(expand=TRUE)
+    # import_export_btn.pack(expand=TRUE)
     if user_access_level == "administrator":
         add_employee_button.pack(expand = TRUE)
     #

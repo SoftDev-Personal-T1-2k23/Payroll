@@ -25,12 +25,16 @@ VALIDATION_REGEX = {
     "Phone": r"^\d{3}\-\d{3}\-\d{4}",
     "JobTitle": r"^.*\w.*",
     "IsArchived": r"^\d",
+    "SSN": r"^\d{3}-\d{2}-\d{4}",
+    "TerminationDate": r"^\d{1,2}\/\d{1,2}\/(\d{4}|\d{2})",
+    "ArchivalDate": r"^\d{1,2}\/\d{1,2}\/(\d{4}|\d{2})",
 }
 VALIDATION_ERROR_LOOKUP = {
     "only_digits": "%s may only include numbers.",
     "no_digits": "%s must not include numbers",
     "one_digit": "%s must include a single digit.",
     "at_least_single_char": "%s must include at least one letter or number.",
+    "date": "%s must use digits and backslashes. Year must be 2 or 4 digits. Format: 00/00/00",
 }
 VERR = VALIDATION_ERROR_LOOKUP
 VALIDATION_ERROR_MESSAGE = {
@@ -56,7 +60,10 @@ VALIDATION_ERROR_MESSAGE = {
     "Email": "%s format: valid@domain.com",
     "Phone": "%s format: 000-000-0000",
     "JobTitle": VERR["at_least_single_char"],
-    "IsArchived": VERR["one_digit"]
+    "IsArchived": VERR["one_digit"],
+    "SSN": "%s must be of the format: 000-00-0000",
+    "TerminationDate": VERR["date"],
+    "ArchivalDate": VERR["date"],
 }
 
 class Validation():

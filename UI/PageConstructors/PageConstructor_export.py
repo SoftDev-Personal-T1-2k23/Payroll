@@ -7,7 +7,7 @@ from UI.tooltip_controller import TooltipController
 BUTTON_WIDTH = 20
 
 def constructor(ui_core, ttc:TooltipController, cache, page_data):
-
+    udi = ui_core.ui_data_interface
 
     # Split the page into necessary panels
     base_frame = ttk.Frame(ui_core.root, padding=15)
@@ -21,7 +21,11 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
     # Add a list of buttons for various export options (csv export, pay report)
     # Add necessary tooltips
     button_frame = ttk.Frame(login_frame)
-    pay_report_btn = ttk.Button(button_frame, text="Export Pay Report", width=BUTTON_WIDTH)
+
+    def export_pay_report(*args):
+        # udi.export_pay_report()
+        pass
+    pay_report_btn = ttk.Button(button_frame, text="Export Pay Report", width=BUTTON_WIDTH, command=export_pay_report)
     ttc.add_tooltip(pay_report_btn, "export_pay_report_btn", (-170, 0), ("Export Pay Report", "Generate a pay report"))
 
     # Add a "to home page" button (-> home page) & other "ease of use" buttons
