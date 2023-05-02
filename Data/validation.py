@@ -6,7 +6,7 @@ VALIDATION_REGEX = {
     "Name": r"^([a-zA-Z]+\s([a-zA-Z]+\.*\s)*[a-zA-Z]+)",
     "FirstName": r"(^[a-zA-Z]+$)",
     "LastName": r"(^[a-zA-Z]+$)",
-    "Address": r"^\d+\s([a-zA-Z]\s)+",
+    "Address": r".*",#r"^\d+\s([a-zA-Z]\s)+",
     "City": r"^\D+",
     "State": r"^[A-Z]{2}",
     "Zip": r"^\d+",
