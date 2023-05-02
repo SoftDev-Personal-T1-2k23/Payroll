@@ -1,0 +1,34 @@
+Login Process
+# Shareholder Logins to Test:
+----
+User: Admin
+Pass: pass
+----
+User: User
+Pass: pass
+
+# Upon opening the software, the user will be presented with a login page.
+To proceed, use any employee's first name as the user name and their ID as the password.
+Once logged in, you will be directed to the main page of the software.
+
+# Viewing and Editing Employee Information
+On the main page, the user can view their employee information by clicking on the "View" button.
+The user can also edit their employee information by clicking on the "Edit" button.
+After editing, ensure that all the necessary fields are adjusted and click on the "Save" button to save the changes.
+Please note that changes made to the employee information will be saved in the database.
+The view and edit page may also be reached from the search page, for ease of use.
+
+# Changing Password
+To change the password, the user can access this option on the edit page.
+The default password is the employee's ID.
+Please ensure that you select a secure password.
+
+# Export and Generate Pay Report
+To export or generate a pay report, please navigate to the search page.
+Search results will be exported to the specified format.
+
+# Search Functionality
+A search-by type is to the left of the search text box. This changes what you are searching by.
+Additional filters can be found below to narrow the search results.
+Unfortuntely applying multiple filters at once can produce undesired behavior.
+

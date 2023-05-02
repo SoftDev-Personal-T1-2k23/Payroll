@@ -6,6 +6,7 @@ from tkinter import *
 from tkinter import ttk
 from UI.tooltip_controller import TooltipController
 from Data.validation import Validation
+from Data.Payroll import hash_password
 BUTTON_WIDTH = 20
 
 def constructor(ui_core, ttc:TooltipController, cache, page_data):
@@ -165,7 +166,17 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
         if len(errors) == 0:
             print("success")
             show_save_success()
-            udi.make_new_employee([(pair[0], pair[1].get()) for pair in field_entry_pairs])
+            new_emp_data = [(pair[0], pair[1].get()) for pair in field_entry_pairs]
+
+            new_emp_id = "pass"
+            for pair in new_emp_data:
+                if pair[0] == "ID":
+                    new_emp_id = pair[1]
+                    break
+            new_pass = hash_password(new_emp_id)
+            new_emp_data.append(("Password", new_pass))
+
+            udi.make_new_employee(new_emp_data)
         else:
             print(len(errors))
         # udi.update_employee_info([(pair[0], pair[1].get()) for pair in field_entry_pairs])

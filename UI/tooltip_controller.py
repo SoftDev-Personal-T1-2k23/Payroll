@@ -1,6 +1,6 @@
 """A file housing tooltip controller related things"""
 from tkinter import Tk
-from UI.Tooltip import Tooltip
+from UI.tooltip import Tooltip
 
 class TooltipController:
     """A controller for tooltip lifespan and display"""

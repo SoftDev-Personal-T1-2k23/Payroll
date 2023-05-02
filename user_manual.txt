@@ -1,4 +1,12 @@
 Login Process
+Shareholder Logins to Test:
+----
+User: Admin
+Pass: pass
+----
+User: User
+Pass: pass
+
 Upon opening the software, the user will be presented with a login page. To proceed, use any employee's first name as the user name and their ID as the password. Once logged in, you will be directed to the main page of the software.
 
 Viewing and Editing Employee Information
