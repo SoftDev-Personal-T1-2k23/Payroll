@@ -31,11 +31,11 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
     #       General emp. info, Personal emp. info, and Sensitive emp. info
     # Add necessary tooltips
     middle_frame = ttk.Frame(base_frame)
-    public_frame = ttk.Frame(middle_frame, width=400, height=120, style="Public.TFrame")
+    public_frame = ttk.Frame(middle_frame, width=400, height=140, style="Public.TFrame")
     public_frame.pack_propagate(False)
-    private_frame = ttk.Frame(middle_frame, width=400, height=120, style="Private.TFrame")
+    private_frame = ttk.Frame(middle_frame, width=400, height=320, style="Private.TFrame")
     private_frame.pack_propagate(False)
-    admin_frame = ttk.Frame(middle_frame, width=400, height=120, style="Admin.TFrame")
+    admin_frame = ttk.Frame(middle_frame, width=400, height=140, style="Admin.TFrame")
     admin_frame.pack_propagate(False)
 
     # Add a "to prev page" button (-> home page | search page) & other "ease of use" buttons
@@ -146,7 +146,7 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
         validator = Validation()
         
         for pair in info_list:
-            print(pair[0], pair[1])
+            # print(pair[0], pair[1])
             error =  validator.validate_field(pair[0], pair[1])
 
             
@@ -159,9 +159,13 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
                 
         
         # print(errors) 
+
         if len(errors) == 0:
+            print("success")
             show_save_success()
             udi.make_new_employee([(pair[0], pair[1].get()) for pair in field_entry_pairs])
+        else:
+            print(len(errors))
         # udi.update_employee_info([(pair[0], pair[1].get()) for pair in field_entry_pairs])
     # save_failed_text:ttk.Label = None
     
