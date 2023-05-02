@@ -10,6 +10,7 @@ BUTTON_WIDTH = 20
 
 def constructor(ui_core, ttc:TooltipController, cache, page_data):
     udi = ui_core.ui_data_interface
+    ui_core.root.geometry("600x600")
 
     target_employee = udi.get_target_employee()
     target_employee_data = target_employee.get_editable_field_data()
@@ -31,11 +32,11 @@ def constructor(ui_core, ttc:TooltipController, cache, page_data):
     #       General emp. info, Personal emp. info, and Sensitive emp. info
     # Add necessary tooltips
     middle_frame = ttk.Frame(base_frame)
-    public_frame = ttk.Frame(middle_frame, width=400, height=120, style="Public.TFrame")
+    public_frame = ttk.Frame(middle_frame, width=600, height=120, style="Public.TFrame")
     public_frame.pack_propagate(False)
-    private_frame = ttk.Frame(middle_frame, width=400, height=120, style="Private.TFrame")
+    private_frame = ttk.Frame(middle_frame, width=600, height=120, style="Private.TFrame")
     private_frame.pack_propagate(False)
-    admin_frame = ttk.Frame(middle_frame, width=400, height=120, style="Admin.TFrame")
+    admin_frame = ttk.Frame(middle_frame, width=600, height=120, style="Admin.TFrame")
     admin_frame.pack_propagate(False)
 
     # Add a "to prev page" button (-> home page | search page) & other "ease of use" buttons
