@@ -45,7 +45,7 @@ class TooltipController:
         # Hide the tooltip, if it exists
         self.hide_tooltip()
 
-    def add_tooltip(self, parent:Tk, elem_id:str, offset:tuple, tt_info_pair:str) ->None:
+    def add_tooltip(self, parent:Tk, elem_id:str, offset:tuple, tt_info_pair) ->None:
         """'Add' a tooltip to the specified widget, and store the info for later
         
           Params:

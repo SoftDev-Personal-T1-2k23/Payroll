@@ -27,9 +27,9 @@ class Tooltip:
 
         # Create the tooltip widget(s)
         style = ttk.Style()
-        style.configure("Tooltip.TFrame", background="#AAA")
-        style.configure("Tooltip.TLabel", background="#AAA")
-        style.configure("TooltipBold.TLabel", background="#AAA", font=("Sans", 10, "bold"))
+        style.configure("Tooltip.TFrame", background="#EEA")
+        style.configure("Tooltip.TLabel", background="#EEA")
+        style.configure("TooltipBold.TLabel", background="#EEA", font=("Sans", 10, "bold"))
 
         frame = ttk.Frame(self.root, style="Tooltip.TFrame", width=20)
 
